@@ -1,6 +1,7 @@
-# 10x Astro Starter
+# PilotVoice
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+PilotVoice is a web app for paragliding competitions that streamlines pilot feedback.
+It lets participants quickly evaluate events, moderators manage and analyze data, and organizers and supervising bodies gain valuable insights for improvement.
 
 ## Tech Stack
 
@@ -19,8 +20,8 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
+git clone https://github.com/mgajczewski/PilotVoice.git
+cd PilotVoice
 ```
 
 2. Install dependencies:
