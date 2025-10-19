@@ -61,6 +61,7 @@ npm run build
 │   ├── components/ # UI components (Astro & React)
 │   └── assets/     # Static assets
 ├── public/         # Public assets
+├── docs/           # Documentation
 ```
 
 ## AI Development Support
