@@ -2,11 +2,11 @@
 
 ## 1. Przegląd produktu
 
-PilotVoice to aplikacja internetowa dedykowana środowisku paralotniowemu, której celem jest systematyczne zbieranie opinii od uczestników zawodów. Aplikacja umożliwia pilotom wypełnianie standaryzowanych ankiet oceniających różne aspekty rywalizacji. Z drugiej strony, moderatorzy (np. organizatorzy zawodów) otrzymują dostęp do panelu z zagregowanymi, anonimowymi danymi, co pozwala na analizę i wyciąganie wniosków w celu podnoszenia jakości przyszłych wydarzeń. MVP (Minimum Viable Product) skupia się na stworzeniu prostego, ale w pełni funkcjonalnego narzędzia do realizacji tego podstawowego celu, odkładając na później bardziej zaawansowane funkcje, takie jak integracje z zewnętrznymi systemami czy automatyzację.
+PilotVoice to aplikacja internetowa dedykowana środowisku paralotniowemu, której celem jest systematyczne zbieranie opinii od uczestników zawodów. Aplikacja pozwala pilotom wypełniać standaryzowane ankiety oceniające różne aspekty rywalizacji. Z drugiej strony, moderatorzy (np. organizatorzy zawodów) otrzymują dostęp do panelu z zagregowanymi, anonimowymi danymi, co pozwala na analizę i wyciąganie wniosków w celu podnoszenia jakości przyszłych wydarzeń. MVP (Minimum Viable Product) skupia się na stworzeniu prostego, ale w pełni funkcjonalnego narzędzia do realizacji tego podstawowego celu, odkładając na później bardziej zaawansowane funkcje, takie jak integracje z zewnętrznymi systemami czy automatyzację.
 
 ## 2. Problem użytkownika
 
-W środowisku paralotniowym istnieje wyraźny brak ustrukturyzowanego kanału do przekazywania informacji zwrotnych dotyczących przebiegu zawodów. Bez systematycznego zbierania opinii od uczestników, organizatorom trudno jest identyfikować obszary wymagające poprawy i podejmować decyzje oparte na danych. Obecne metody zgłaszania uwag są często nieformalne, uciążliwe dla zawodników i nieefektywne, co prowadzi do utraty cennych spostrzeżeń i uniemożliwia systemowe doskonalenie organizacji zawodów paralotniowych w przyszłości.
+W środowisku paralotniowym istnieje wyraźny brak skutecznego kanału do przekazywania informacji zwrotnych dotyczących przebiegu zawodów. Bez systematycznego zbierania opinii od uczestników, organizatorom i organizacjom nadzorującym trudno jest identyfikować obszary wymagające poprawy i podejmować decyzje oparte na danych. Obecne metody zgłaszania uwag są często uciążliwe dla zawodników i nieefektywne, co prowadzi do utraty cennych spostrzeżeń i uniemożliwia systemowe doskonalenie organizacji zawodów paralotniowych w przyszłości.
 
 ## 3. Wymagania funkcjonalne
 
@@ -108,7 +108,7 @@ Następujące funkcjonalności celowo NIE wchodzą w zakres wersji MVP:
 
 -   ID: US-007
 -   Tytuł: Weryfikacja GDPR dla pytań otwartych
--   Opis: Jako użytkownik wypełniający pytanie otwarte, chcę, aby system pomógł mi upewnić się, że moja odpowiedź nie zawiera danych osobowych.
+-   Opis: Jako użytkownik wypełniający pytanie otwarte, chcę, aby system zwrócł mi uwagę, że moja odpowiedź zawiera dane osobowe i pomógł mi ją poprawić.
 -   Kryteria akceptacji:
     1.  Po wpisaniu odpowiedzi w pole otwarte, system (AI) analizuje tekst pod kątem danych osobowych.
     2.  Jeśli potencjalne dane osobowe zostaną znalezione, system wyświetla moją oryginalną treść oraz sugestię wersji zanonimizowanej.
@@ -119,8 +119,8 @@ Następujące funkcjonalności celowo NIE wchodzą w zakres wersji MVP:
 -   Opis: Jako użytkownik, po wypełnieniu wszystkich obowiązkowych pytań, chcę zakończyć tę część ankiety i otrzymać potwierdzenie.
 -   Kryteria akceptacji:
     1.  Gdy wszystkie obowiązkowe pola są wypełnione, ankieta w systemie otrzymuje status `completed`.
-    2.  Zostaję przekierowany na stronę z podziękowaniem.
-    3.  Na stronie z podziękowaniem znajduje się informacja o możliwości wypełnienia pytań opcjonalnych.
+    2.  Po wypełnieniu wszystkich obowiązkowych pól, widzę informację z podziękowaniem.
+    3.  Widzę też informację o możliwości wypełnienia pytań opcjonalnych.
 
 -   ID: US-009
 -   Tytuł: Uzupełnianie pytań opcjonalnych
@@ -131,7 +131,7 @@ Następujące funkcjonalności celowo NIE wchodzą w zakres wersji MVP:
 
 -   ID: US-010
 -   Tytuł: Wymóg uzupełnienia profilu
--   Opis: Jako użytkownik, który wypełnił swoją pierwszą ankietę, chcę zostać poinformowany o konieczności uzupełnienia profilu przed wypełnieniem kolejnej.
+-   Opis: Jako użytkownik, który wypełnił swoją pierwszą ankietę, chcę zostać poinformowany o konieczności i celowości uzupełnienia profilu przed wypełnieniem kolejnej.
 -   Kryteria akceptacji:
     1.  Po ukończeniu pierwszej ankiety, na stronie z podziękowaniem pojawia się prośba o uzupełnienie profilu (CIVL ID lub powód).
     2.  Gdy próbuję rozpocząć drugą ankietę bez uzupełnionego profilu, jestem blokowany i przekierowywany do strony profilu.
