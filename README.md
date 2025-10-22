@@ -1,96 +1,123 @@
 # PilotVoice
 
-PilotVoice is a web app for paragliding competitions that streamlines pilot feedback.
-It lets participants quickly evaluate events, moderators manage and analyze data, and organizers and supervising bodies gain valuable insights for improvement.
+[![Project Status: WIP](https://img.shields.io/badge/status-work_in_progress-yellow.svg)](https://github.com/mgajczewski/pilot-voice)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+PilotVoice is a web application for the paragliding community, designed to systematically collect feedback from competition participants. The application allows pilots to fill out standardized surveys evaluating various aspects of a competition. Moderators, such as event organizers, get access to a panel with aggregated, anonymous data, which enables analysis and helps improve the quality of future events.
+
+## Table of Contents
+
+- [Tech Stack](#tech-stack)
+- [Getting Started Locally](#getting-started-locally)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Available Scripts](#available-scripts)
+- [Project Scope (MVP)](#project-scope-mvp)
+  - [Key Features](#key-features)
+  - [Out of Scope](#out-of-scope)
+- [Project Status](#project-status)
+- [License](#license)
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+- **Frontend:** Astro 5, React 19, TypeScript 5, Tailwind 4, Shadcn/ui
+- **Backend & Database:** Supabase
+- **AI Integration:** Openrouter.ai
+- **CI/CD & Hosting:** GitHub Actions, Vercel
 
-## Prerequisites
+## Getting Started Locally
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+Follow these instructions to get the project up and running on your local machine.
 
-## Getting Started
+### Prerequisites
 
-1. Clone the repository:
+- **Node.js**: `v22.14.0` (it's recommended to use a version manager like [nvm](https://github.com/nvm-sh/nvm))
+- **npm**: version 10 or higher
+- **Supabase Account**: You will need a Supabase project to connect to the database and authentication.
 
-```bash
-git clone https://github.com/mgajczewski/PilotVoice.git
-cd PilotVoice
-```
+### Installation
 
-2. Install dependencies:
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/mgajczewski/pilot-voice.git
+    cd pilot-voice
+    ```
 
-```bash
-npm install
-```
+2.  **Set the Node.js version:**
+    If you are using `nvm`, run this command to use the correct Node.js version:
+    ```bash
+    nvm use
+    ```
 
-3. Run the development server:
+3.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-```bash
-npm run dev
-```
+4.  **Set up environment variables:**
+    Create a `.env` file in the root of the project by copying the example file:
+    ```bash
+    cp .env.example .env
+    ```
+    Populate the `.env` file with your Supabase project credentials.
+    ```env
+    PUBLIC_SUPABASE_URL="YOUR_SUPABASE_URL"
+    PUBLIC_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+    ```
 
-4. Build for production:
-
-```bash
-npm run build
-```
+5.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+    The application will be available at `http://localhost:4321`.
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+The following scripts are available in the `package.json`:
 
-## Project Structure
+- `npm run dev`: Starts the application in development mode.
+- `npm run build`: Builds the application for production.
+- `npm run preview`: Runs a local server to preview the production build.
+- `npm run lint`: Lints the source code using ESLint.
+- `npm run lint:fix`: Lints the source code and attempts to fix issues automatically.
+- `npm run format`: Formats the code using Prettier.
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-├── docs/           # Documentation
-```
+## Project Scope (MVP)
 
-## AI Development Support
+This section outlines the features included in the Minimum Viable Product (MVP).
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+### Key Features
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+- **User Management:**
+    - Email/password registration and login.
+    - User roles: `Pilot` and `Moderator`.
+    - Simple user profile management.
+- **Survey Process (Pilot):**
+    - Access surveys via unique URLs.
+    - Automatic saving of survey progress.
+    - AI-powered anonymization of answers in open-ended questions.
+- **Survey Management (Moderator):**
+    - Create and configure surveys for competitions.
+    - Schedule survey opening and closing times.
+    - Access a dashboard with aggregated and anonymous results.
 
-### Cursor IDE
+### Out of Scope
 
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
+The following features are intentionally not included in the MVP:
 
-### GitHub Copilot
+- Automatic survey creation from external competition calendars.
+- Integration with external authentication services (e.g., Google, Facebook).
+- Email or push notification system.
+- Integration with safety incident reporting systems.
+- Advanced data analysis and report generation.
+- Direct communication tools between moderators and pilots.
+- A system to verify if a user participated in the assessed competition.
+- Multi-language support.
 
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
+## Project Status
 
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+The project is currently in the **initial development phase** for its MVP release. Contributions and feedback are welcome.
 
 ## License
 
-MIT
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
