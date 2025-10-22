@@ -3,9 +3,9 @@ description:
 globs: 
 alwaysApply: true
 ---
-# AI Rules for {app-name}
+# AI Rules for PilotVoice
 
-{project-description}
+PilotVoice is a web app for paragliding competitions that streamlines pilot feedback. It lets participants quickly evaluate events, moderators manage and analyze data, and organizers and supervising bodies gain valuable insights for improvement.
 
 ## Tech Stack
 
