@@ -26,7 +26,7 @@ const submissions = defineCollection({
   loader: async () => await loadSubmissions(),
   schema: z.object({
     id: z.string(),
-    submissionAt: z.string(),
+    createdAt: z.string(),
     status: z.enum(["submitted", "processing", "processed", "rejected"]),
     feedback: z.string(),
     incidentsIds: z.array(z.string()),
