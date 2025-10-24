@@ -91,14 +91,18 @@ Stores responses submitted by pilots for each survey.
 ## 3. Indexes
 
 - **`surveys`**:
-  - An index is automatically created on `competition_id` due to the foreign key constraint.
-  - A partial unique index on `slug` to ensure uniqueness for non-null values.
+  - An index is explicitly created on `competition_id` to optimize joins.
+  - The `slug` column has a `UNIQUE` constraint to ensure all slugs are distinct.
     ```sql
-    CREATE UNIQUE INDEX surveys_slug_idx ON surveys (slug) WHERE slug IS NOT NULL;
+    CREATE INDEX surveys_competition_id_idx ON public.surveys (competition_id);
     ```
 - **`survey_responses`**:
-  - Indexes are automatically created on `survey_id` and `user_id` from foreign keys.
+  - Indexes are explicitly created on `survey_id` and `user_id` to improve query performance on these foreign keys.
   - The `UNIQUE (survey_id, user_id)` constraint also creates an optimal composite index for lookups.
+    ```sql
+    CREATE INDEX survey_responses_survey_id_idx ON public.survey_responses (survey_id);
+    CREATE INDEX survey_responses_user_id_idx ON public.survey_responses (user_id);
+    ```
 
 ## 4. PostgreSQL Functions & Triggers
 
@@ -120,7 +124,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- Trigger to call the function after a new user is inserted into auth.users
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 ```
 
 ### `moddatetime` Function & Trigger for `updated_at`
@@ -139,13 +143,13 @@ $$ language 'plpgsql';
 
 -- Triggers for each table
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON profiles 
-  FOR EACH ROW EXECUTE PROCEDURE moddatetime();
+  FOR EACH ROW EXECUTE FUNCTION moddatetime();
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON competitions 
-  FOR EACH ROW EXECUTE PROCEDURE moddatetime();
+  FOR EACH ROW EXECUTE FUNCTION moddatetime();
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON surveys 
-  FOR EACH ROW EXECUTE PROCEDURE moddatetime();
+  FOR EACH ROW EXECUTE FUNCTION moddatetime();
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON survey_responses 
-  FOR EACH ROW EXECUTE PROCEDURE moddatetime();
+  FOR EACH ROW EXECUTE FUNCTION moddatetime();
 ```
 
 ## 5. Views
@@ -196,15 +200,27 @@ $$ LANGUAGE plpgsql;
 
 ```sql
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles FORCE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own profile" ON public.profiles
   FOR SELECT USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can update their own profile" ON public.profiles
-  FOR UPDATE USING (auth.uid() = user_id);
+  FOR UPDATE USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Super Admins have full access to profiles" ON public.profiles
-  FOR ALL USING (get_user_role() = 'super_admin');
+CREATE POLICY "Super Admins can view any profile" ON public.profiles
+  FOR SELECT USING (get_user_role() = 'super_admin');
+
+CREATE POLICY "Super Admins can create any profile" ON public.profiles
+  FOR INSERT WITH CHECK (get_user_role() = 'super_admin');
+
+CREATE POLICY "Super Admins can update any profile" ON public.profiles
+  FOR UPDATE USING (get_user_role() = 'super_admin')
+  WITH CHECK (get_user_role() = 'super_admin');
+
+CREATE POLICY "Super Admins can delete any profile" ON public.profiles
+  FOR DELETE USING (get_user_role() = 'super_admin');
 ```
 
 ### `competitions` & `surveys` Policies
@@ -214,19 +230,31 @@ CREATE POLICY "Super Admins have full access to profiles" ON public.profiles
 
 ```sql
 ALTER TABLE public.competitions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.competitions FORCE ROW LEVEL SECURITY;
 ALTER TABLE public.surveys ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.surveys FORCE ROW LEVEL SECURITY;
 
 -- Competitions Policies
 CREATE POLICY "Allow read access to all authenticated users" ON public.competitions
   FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Allow full access for moderators and super admins" ON public.competitions
-  FOR ALL USING (get_user_role() IN ('moderator', 'super_admin'));
+CREATE POLICY "Allow insert for moderators and super admins" ON public.competitions
+  FOR INSERT WITH CHECK (get_user_role() IN ('moderator', 'super_admin'));
+CREATE POLICY "Allow update for moderators and super admins" ON public.competitions
+  FOR UPDATE USING (get_user_role() IN ('moderator', 'super_admin'))
+  WITH CHECK (get_user_role() IN ('moderator', 'super_admin'));
+CREATE POLICY "Allow delete for moderators and super admins" ON public.competitions
+  FOR DELETE USING (get_user_role() IN ('moderator', 'super_admin'));
 
 -- Surveys Policies
 CREATE POLICY "Allow read access to all authenticated users" ON public.surveys
   FOR SELECT TO authenticated USING (true);
-CREATE POLICY "Allow full access for moderators and super admins" ON public.surveys
-  FOR ALL USING (get_user_role() IN ('moderator', 'super_admin'));
+CREATE POLICY "Allow insert for moderators and super admins" ON public.surveys
+  FOR INSERT WITH CHECK (get_user_role() IN ('moderator', 'super_admin'));
+CREATE POLICY "Allow update for moderators and super admins" ON public.surveys
+  FOR UPDATE USING (get_user_role() IN ('moderator', 'super_admin'))
+  WITH CHECK (get_user_role() IN ('moderator', 'super_admin'));
+CREATE POLICY "Allow delete for moderators and super admins" ON public.surveys
+  FOR DELETE USING (get_user_role() IN ('moderator', 'super_admin'));
 ```
 
 ### `survey_responses` Policies
@@ -236,9 +264,20 @@ CREATE POLICY "Allow full access for moderators and super admins" ON public.surv
 
 ```sql
 ALTER TABLE public.survey_responses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.survey_responses FORCE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can manage their own responses" ON public.survey_responses
-  FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users can select their own responses" ON public.survey_responses
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert their own responses" ON public.survey_responses
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own responses" ON public.survey_responses
+  FOR UPDATE USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own responses" ON public.survey_responses
+  FOR DELETE USING (auth.uid() = user_id);
 
 CREATE POLICY "Moderators and Super Admins can view all responses" ON public.survey_responses
   FOR SELECT USING (get_user_role() IN ('moderator', 'super_admin'));
