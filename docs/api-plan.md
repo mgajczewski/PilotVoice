@@ -7,7 +7,6 @@
 -   **Surveys**: Represents surveys associated with competitions. Mapped to the `surveys` table.
 -   **Survey Responses**: Represents user-submitted responses to surveys. Mapped to the `survey_responses` table.
 -   **Admin**: A virtual resource for administrative operations like role management.
--   **Anonymizer**: A virtual resource for processing text to remove personal data.
 
 ## 2. Endpoints
 
@@ -187,7 +186,7 @@
 
 #### PATCH /api/survey-responses/{responseId}
 
--   **Description**: Updates (saves progress for) a specific survey response.
+-   **Description**: Updates (saves progress for) a specific survey response. The `open_feedback` field will be automatically anonymized by the server before saving.
 -   **Request Body**:
     ```json
     {
@@ -225,27 +224,6 @@
 -   **Success**: `200 OK`
 -   **Error**: `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
 
-### Anonymizer
-
-#### POST /api/anonymize
-
--   **Description**: Processes a string of text to find and suggest anonymized replacements for personal data.
--   **Request Body**:
-    ```json
-    {
-      "text": "The user's original text."
-    }
-    ```
--   **Response Body**:
-    ```json
-    {
-      "originalText": "The user's original text.",
-      "anonymizedText": "The AI-processed, anonymized text."
-    }
-    ```
--   **Success**: `200 OK`
--   **Error**: `400 Bad Request`
-
 ### Business Logic
 
 #### GET /api/surveys/{id}/results
@@ -282,7 +260,7 @@
     -   Database constraints (e.g., `CHECK (ends_at > starts_at)`) provide a final layer of data integrity. Zod schemas in the API should mirror these constraints to provide better user feedback.
 
 -   **Business Logic Implementation**:
-    -   **GDPR Anonymization**: Implemented via the `/api/anonymize` endpoint. The client is responsible for calling this endpoint before submitting open feedback via `PATCH /api/survey-responses/{id}`.
+    -   **GDPR Anonymization**: The `PATCH /api/survey-responses/{id}` endpoint handles anonymization internally.
     -   **Survey Status**: The `survey_responses_status` view in the database computes the status (`started`, `completed`, `abandoned`) dynamically. The API can query this view for reporting. The client sets `completed_at` when the user finishes the mandatory parts, which triggers the 'completed' status.
     -   **Profile Completion Gate**: This logic will be implemented on the client-side. After a user completes a survey, the client will check their profile. If it's incomplete and they try to start another survey, the UI will redirect them to their profile page instead of calling the API to start a new response.
     -   **Aggregated Results**: The `/api/surveys/{id}/results` endpoint encapsulates the logic for calculating metrics. It will fetch the necessary data (responses, competition details) and perform the aggregations before returning the final report.
