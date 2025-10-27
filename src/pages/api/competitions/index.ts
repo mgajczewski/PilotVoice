@@ -12,12 +12,12 @@ const querySchema = z.object({
 });
 
 export async function GET(context: APIContext): Promise<Response> {
-  if (!context.locals.user) {
-    return new Response(JSON.stringify({ message: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+  //   if (!context.locals.user) {
+  //     return new Response(JSON.stringify({ message: "Unauthorized" }), {
+  //       status: 401,
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+  //   }
 
   const url = new URL(context.request.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
