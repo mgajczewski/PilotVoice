@@ -1,8 +1,77 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
+import FeatureCard from "../components/FeatureCard.astro";
+import { Button } from "../components/ui/button";
+
+const features = [
+  {
+    icon: "⚡",
+    title: "Quick Surveys",
+    description:
+      "Complete standardized surveys in just a few minutes after competitions. Your feedback matters and takes minimal time.",
+  },
+  {
+    icon: "🔒",
+    title: "Anonymous Feedback",
+    description:
+      "Your responses are fully anonymous and secure. Share honest opinions without concerns about identification.",
+  },
+  {
+    icon: "🎯",
+    title: "Drive Change",
+    description:
+      "Help organizers improve future events. Your feedback directly influences the quality of competitions.",
+  },
+];
 ---
 
-<Layout>
-  <Welcome />
+<Layout
+  title="PilotVoice - Voice of Pilots in Paragliding Competitions"
+  description="Systematic feedback collection from paragliding competition participants. Help organizers improve future events."
+>
+  <!-- Hero Section -->
+  <section class="min-h-[80vh] flex items-center justify-center px-4 py-16 md:py-24">
+    <div class="container mx-auto max-w-4xl text-center">
+      <!-- Headline -->
+      <h1 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl mb-6">
+        Your Voice in Paragliding Competitions
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="text-lg text-muted-foreground sm:text-xl md:text-2xl mb-8 md:mb-12 leading-relaxed max-w-3xl mx-auto">
+        PilotVoice makes it easy for pilots to share feedback on competitions. Help organizers understand what works and
+        what needs improvement. Your insights shape better events for everyone.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <Button size="lg" asChild>
+          <a href="/register"> Sign Up Now </a>
+        </Button>
+        <Button size="lg" variant="outline" asChild>
+          <a href="/login"> Sign In </a>
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 md:py-24 bg-muted/30">
+    <div class="container mx-auto px-4 md:px-6">
+      <!-- Section Title -->
+      <div class="text-center mb-12 md:mb-16">
+        <h2 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl mb-4">How It Works</h2>
+        <p class="text-lg text-muted-foreground max-w-2xl mx-auto">Simple, secure, and impactful feedback process</p>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+        {
+          features.map((feature) => (
+            <FeatureCard icon={feature.icon} title={feature.title} description={feature.description} />
+          ))
+        }
+      </div>
+    </div>
+  </section>
 </Layout>

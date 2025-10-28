@@ -1,0 +1,26 @@
+---
+import { Button } from "./ui/button";
+---
+
+<header class="border-b border-border bg-background">
+  <nav class="container mx-auto flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
+    <!-- Logo -->
+    <a
+      href="/"
+      class="text-xl font-bold text-foreground hover:text-primary transition-colors md:text-2xl"
+      aria-label="PilotVoice - Home"
+    >
+      PilotVoice
+    </a>
+
+    <!-- Navigation Buttons -->
+    <div class="flex items-center gap-2 md:gap-4">
+      <Button variant="ghost" asChild>
+        <a href="/login"> Sign In </a>
+      </Button>
+      <Button asChild>
+        <a href="/register"> Sign Up </a>
+      </Button>
+    </div>
+  </nav>
+</header>
