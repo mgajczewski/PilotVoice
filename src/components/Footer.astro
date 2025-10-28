@@ -1,0 +1,21 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-border bg-muted/30">
+  <div class="container mx-auto px-4 py-8 md:px-6">
+    <div class="flex flex-col items-center justify-center gap-4 text-center md:flex-row md:justify-between">
+      <!-- Copyright -->
+      <p class="text-sm text-muted-foreground">
+        © {currentYear} PilotVoice. All rights reserved.
+      </p>
+
+      <!-- Optional Navigation Links -->
+      <nav class="flex gap-6 text-sm" aria-label="Footer links">
+        <a href="/privacy" class="text-muted-foreground hover:text-foreground transition-colors"> Privacy Policy </a>
+        <a href="/terms" class="text-muted-foreground hover:text-foreground transition-colors"> Terms of Service </a>
+        <a href="/contact" class="text-muted-foreground hover:text-foreground transition-colors"> Contact </a>
+      </nav>
+    </div>
+  </div>
+</footer>
