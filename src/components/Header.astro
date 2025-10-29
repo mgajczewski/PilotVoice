@@ -1,5 +1,5 @@
 ---
-import { Button } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 ---
 
 <header class="border-b border-border bg-background">
@@ -15,12 +15,8 @@ import { Button } from "./ui/button";
 
     <!-- Navigation Buttons -->
     <div class="flex items-center gap-2 md:gap-4">
-      <Button variant="ghost" asChild>
-        <a href="/login"> Sign In </a>
-      </Button>
-      <Button asChild>
-        <a href="/register"> Sign Up </a>
-      </Button>
+      <a href="/login" class={buttonVariants({ variant: "ghost" })}> Sign In </a>
+      <a href="/register" class={buttonVariants()}> Sign Up </a>
     </div>
   </nav>
 </header>

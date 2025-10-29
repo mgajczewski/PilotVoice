@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import FeatureCard from "../components/FeatureCard.astro";
-import { Button } from "../components/ui/button";
+import { buttonVariants } from "../components/ui/button";
 
 const features = [
   {
@@ -45,12 +45,8 @@ const features = [
 
       <!-- CTA Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <Button size="lg" asChild>
-          <a href="/register"> Sign Up Now </a>
-        </Button>
-        <Button size="lg" variant="outline" asChild>
-          <a href="/login"> Sign In </a>
-        </Button>
+        <a href="/register" class={buttonVariants({ size: "lg" })}> Sign Up Now </a>
+        <a href="/login" class={buttonVariants({ size: "lg", variant: "outline" })}> Sign In </a>
       </div>
     </div>
   </section>
