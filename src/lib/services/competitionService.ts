@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "../../db/supabase.client.ts";
-import type { PaginatedCompetitionsDto } from "../../types";
+import type { PaginatedCompetitionsDto } from "../../types.ts";
 
 interface GetCompetitionsParams {
   page: number;

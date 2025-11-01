@@ -80,7 +80,7 @@ Ten punkt końcowy (`endpoint`) jest odpowiedzialny za pobieranie listy zawodów
     -   Wywołać metodę z serwisu `CompetitionService` w bloku `try...catch`.
     -   W przypadku błędu serwisu, zalogować go i zwrócić `500`.
     -   W przypadku sukcesu, zwrócić dane z serwisu ze statusem `200`.
-4.  **Utworzenie pliku serwisu**: Stworzyć nowy plik `src/lib/services/competition.service.ts`.
+4.  **Utworzenie pliku serwisu**: Stworzyć nowy plik `src/lib/services/competitionService.ts`.
 5.  **Implementacja logiki serwisu**:
     -   Stworzyć funkcję asynchroniczną `getCompetitions`, która przyjmuje zwalidowane parametry i klienta Supabase.
     -   Obliczyć zakres (`from`, `to`) dla paginacji na podstawie `page` i `pageSize`.
