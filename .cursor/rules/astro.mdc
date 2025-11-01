@@ -12,6 +12,7 @@ alwaysApply: false
 - Use `export const prerender = false` for API routes
 - Use zod for input validation in API routes
 - Extract logic into services in `src/lib/services`
+- Service file should be named with a pattern nameService.ts (eg. competitionService.ts)
 - Implement middleware for request/response modification
 - Use image optimization with the Astro Image integration
 - Implement hybrid rendering with server-side rendering where needed

@@ -1,6 +1,6 @@
 import type { APIContext } from "astro";
 import { z } from "zod";
-import { CompetitionService } from "../../../lib/services/competition.service";
+import { CompetitionService } from "../../../lib/services/competitionService";
 
 export const prerender = false;
 
