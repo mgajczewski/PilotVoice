@@ -3,7 +3,7 @@ Twoim zadaniem jest wdrożenie endpointa interfejsu API REST w oparciu o podany 
 Zanim zaczniemy, dopytaj o poniższe informacje:
 1. Plan implementacji (np. generations-endpoint-implementation-plan).
 2. Definicje typów (np. plik types).
-3. Implementation rules (np. shared, backend, astro).
+3. Zasady implementacji (np. shared, backend, astro).
 Koniecznie dopytaj o te 3 rzeczy w podany wyżej sposób (zasugeruj wymienione przykłady), zanim rozpoczniesz tworzenie planu.
 
 Następnie dokładnie przejrzyj dostarczony plan wrożenia.

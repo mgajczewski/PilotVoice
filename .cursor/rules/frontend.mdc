@@ -9,6 +9,7 @@ alwaysApply: false
 
 - Use Astro components (.astro) for static content and layout
 - Implement framework components in React only when interactivity is needed
+- Default language for the page is English; all texts, code and comments should be in English
 
 ### Guidelines for Styling
 

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "../../db/supabase.client.ts";
 import type { CreateSurveyResponseCommand, SurveyResponseDto, UpdateSurveyResponseCommand } from "../../types.ts";
 import { anonymizeFeedback, AnonymizationError } from "./anonymizationService.ts";
+import { SUPABASE_ERROR_CODES } from "../constants/supabaseErrors.ts";
 
 /**
  * Custom error class for survey-related errors
@@ -63,7 +64,7 @@ export const findUserResponse = async (
 
   if (surveyError) {
     // Check if it's a "not found" error
-    if (surveyError.code === "PGRST116") {
+    if (surveyError.code === SUPABASE_ERROR_CODES.NOT_FOUND) {
       throw new SurveyNotFoundError(surveyId);
     }
     console.error("Error checking survey existence:", surveyError);
@@ -113,7 +114,7 @@ export const createSurveyResponse = async (
 
   if (surveyError) {
     // Check if it's a "not found" error
-    if (surveyError.code === "PGRST116") {
+    if (surveyError.code === SUPABASE_ERROR_CODES.NOT_FOUND) {
       throw new SurveyNotFoundError(surveyId);
     }
     console.error("Error checking survey existence:", surveyError);
@@ -136,8 +137,8 @@ export const createSurveyResponse = async (
     .single();
 
   if (insertError) {
-    // Check for unique constraint violation (PostgreSQL error code 23505)
-    if (insertError.code === "23505") {
+    // Check for unique constraint violation
+    if (insertError.code === SUPABASE_ERROR_CODES.UNIQUE_VIOLATION) {
       throw new DuplicateSurveyResponseError(surveyId, userId);
     }
     console.error("Error creating survey response:", insertError);
