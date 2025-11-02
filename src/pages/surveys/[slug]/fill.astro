@@ -1,0 +1,63 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { SurveyService, SurveyNotFoundError } from "../../../lib/services/surveyService";
+import { SurveyResponseService } from "../../../lib/services/surveyResponseService";
+import { SurveyFillForm } from "../../../components/survey/SurveyFillForm";
+import type { SurveyDto, CompetitionDto, SurveyResponseDto } from "../../../types";
+
+export const prerender = false;
+
+// Get the slug from the URL
+const { slug } = Astro.params;
+
+// Guard clause: validate slug
+if (!slug) {
+  return Astro.redirect("/404");
+}
+
+// Guard clause: check authentication
+if (!Astro.locals.user) {
+  return Astro.redirect(`/login?redirect=/surveys/${slug}/fill`);
+}
+
+// Get Supabase client and user from context
+const supabase = Astro.locals.supabase;
+const user = Astro.locals.user;
+
+// Fetch survey and competition data
+let surveyData;
+try {
+  surveyData = await SurveyService.getSurveyBySlug(slug, supabase);
+} catch (error) {
+  if (error instanceof SurveyNotFoundError) {
+    return Astro.redirect("/404");
+  }
+  console.error("Error loading survey:", error);
+  return Astro.redirect("/500");
+}
+
+const { survey, competition } = surveyData;
+
+// Fetch existing user response (if any)
+let userResponse: SurveyResponseDto | null = null;
+try {
+  userResponse = await SurveyResponseService.findUserResponse(survey.id, user.id, supabase);
+} catch (error) {
+  console.error("Error fetching user response:", error);
+  // Continue without response - will be created on client-side
+}
+---
+
+<Layout title={`Survey: ${competition.name}`} description={`Share your feedback about ${competition.name}`}>
+  <div class="container mx-auto px-4 py-8 md:py-12">
+    <div class="max-w-3xl mx-auto">
+      <SurveyFillForm
+        client:load
+        initialSurvey={survey}
+        initialCompetition={competition}
+        initialResponse={userResponse}
+        user={user}
+      />
+    </div>
+  </div>
+</Layout>
