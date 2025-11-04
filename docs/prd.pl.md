@@ -74,12 +74,11 @@ Następujące funkcjonalności celowo NIE wchodzą w zakres wersji MVP:
     3.  W przypadku podania błędnych danych, wyświetlany jest odpowiedni komunikat.
 
 -   ID: US-003
--   Tytuł: Utrzymanie sesji ("Pamiętaj mnie")
--   Opis: Jako zalogowany użytkownik, chcę, aby system pamiętał moją sesję przez określony czas, abym nie musiał logować się przy każdej wizycie.
+-   Tytuł: Automatyczne utrzymanie sesji
+-   Opis: Jako zalogowany użytkownik, chcę, aby system automatycznie utrzymywał moją sesję, abym nie musiał logować się przy każdej wizycie.
 -   Kryteria akceptacji:
-    1.  Na stronie logowania znajduje się opcja "Pamiętaj mnie".
-    2.  Jeśli opcja jest zaznaczona, moja sesja jest utrzymywana przez 30 dni.
-    3.  Po zamknięciu i ponownym otwarciu przeglądarki w tym okresie, pozostaję zalogowany.
+    1.  System domyślnie utrzymuje sesję użytkownika po pomyślnym zalogowaniu.
+    2.  Po zamknięciu i ponownym otwarciu przeglądarki, pozostaję zalogowany.
 
 -   ID: US-004
 -   Tytuł: Wylogowanie użytkownika
@@ -92,7 +91,7 @@ Następujące funkcjonalności celowo NIE wchodzą w zakres wersji MVP:
 -   Tytuł: Zarządzanie profilem
 -   Opis: Jako zalogowany użytkownik, chcę mieć dostęp do strony "Mój profil", gdzie mogę zarządzać swoim hasłem oraz numerem CIVL ID.
 -   Kryteria akceptacji:
-    1.  Strona profilu umożliwia zmianę hasła (wymaga podania starego i nowego hasła).
+    1.  Strona profilu umożliwia zmianę hasła (wymaga podania tylko nowego hasła, gdy użytkownik jest zalogowany).
     2.  Strona profilu umożliwia dodanie/edycję numeru CIVL ID lub tekstowego powodu rejestracji.
     3.  Zmiany są zapisywane po zatwierdzeniu przez użytkownika.
 
