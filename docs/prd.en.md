@@ -74,12 +74,11 @@ The following functionalities are intentionally NOT in scope for the MVP:
     3.  In case of incorrect data, an appropriate message is displayed.
 
 -   ID: US-003
--   Title: Session persistence ("Remember me")
--   Description: As a logged-in user, I want the system to remember my session for a specified time so that I do not have to log in on every visit.
+-   Title: Automatic session persistence
+-   Description: As a logged-in user, I want the system to automatically persist my session, so I don't have to log in on every visit.
 -   Acceptance criteria:
-    1.  The login page includes a "Remember me" option.
-    2.  If the option is selected, my session is maintained for 30 days.
-    3.  After closing and reopening the browser within this period, I remain logged in.
+    1.  The system persists the user session by default after a successful login.
+    2.  After closing and reopening the browser, I remain logged in.
 
 -   ID: US-004
 -   Title: User logout
@@ -92,7 +91,7 @@ The following functionalities are intentionally NOT in scope for the MVP:
 -   Title: Profile management
 -   Description: As a logged-in user, I want to have access to a "My profile" page where I can manage my password and CIVL ID number.
 -   Acceptance criteria:
-    1.  The profile page allows changing the password (requires entering the old and new password).
+    1.  The profile page allows changing the password (requires entering only the new password when the user is logged in).
     2.  The profile page allows adding/editing the CIVL ID number or a textual reason for registration.
     3.  Changes are saved upon confirmation by the user.
 
