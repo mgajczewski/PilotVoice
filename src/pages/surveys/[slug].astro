@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { SurveyService, SurveyNotFoundError } from "../../lib/services/surveyService";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/card";
+import { SurveyInfoCard } from "../../components/SurveyInfoCard";
 import { SurveyStart } from "../../components/SurveyStart";
 
 export const prerender = false;
@@ -47,40 +47,28 @@ const competitionDates = `${formatDate(competition.starts_at)} - ${formatDate(co
 <Layout title={`Survey: ${competition.name}`} description={`Fill out the survey for ${competition.name}`}>
   <div class="container mx-auto px-4 py-8 md:py-12">
     <div class="max-w-2xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl md:text-3xl">
-            {competition.name}
-          </CardTitle>
-          <CardDescription className="text-base md:text-lg">
-            {competitionDates}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div class="space-y-6">
-            <!-- Competition Info -->
-            <div class="text-muted-foreground">
-              <p class="flex items-center gap-2">
-                <span class="font-medium">Location:</span>
-                <span>{competition.city}, {competition.country_code}</span>
-              </p>
-            </div>
+      <SurveyInfoCard client:load title={competition.name} subtitle={competitionDates}>
+        <!-- Competition Info -->
+        <div class="text-muted-foreground">
+          <p class="flex items-center gap-2">
+            <span class="font-medium">Location:</span>
+            <span>{competition.city}, {competition.country_code}</span>
+          </p>
+        </div>
 
-            <!-- Anonymity Information -->
-            <div class="rounded-lg bg-muted/50 p-4 border border-border">
-              <h3 class="font-semibold mb-2 text-foreground">📋 About the Survey</h3>
-              <p class="text-sm text-muted-foreground leading-relaxed">
-                Your responses are <strong class="text-foreground">completely anonymous</strong>. Competition organizers
-                will not be able to link them to your account. All comments are additionally anonymized using AI to
-                ensure full confidentiality.
-              </p>
-            </div>
+        <!-- Anonymity Information -->
+        <div class="rounded-lg bg-muted/50 p-4 border border-border">
+          <h3 class="font-semibold mb-2 text-foreground">📋 About the Survey</h3>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Your responses are <strong class="text-foreground">completely anonymous</strong>. Competition organizers
+            will not be able to link them to your account. All comments are additionally anonymized using AI to ensure
+            full confidentiality.
+          </p>
+        </div>
 
-            <!-- Survey Start Component (React) -->
-            <SurveyStart client:load surveyId={survey.id} surveySlug={slug} />
-          </div>
-        </CardContent>
-      </Card>
+        <!-- Survey Start Component (React) -->
+        <SurveyStart client:load surveyId={survey.id} surveySlug={slug} />
+      </SurveyInfoCard>
     </div>
   </div>
 </Layout>
