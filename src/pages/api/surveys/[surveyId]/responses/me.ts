@@ -1,8 +1,16 @@
 import type { APIContext } from "astro";
+import { z } from "zod";
 import { SurveyResponseService, SurveyNotFoundError } from "../../../../../lib/services/surveyResponseService";
-import { surveyIdSchema } from "../../../../../lib/schemas/surveyResponseSchemas";
 
 export const prerender = false;
+
+/**
+ * Validation schema for surveyId parameter.
+ * Ensures surveyId is a positive integer.
+ */
+const surveyIdSchema = z.coerce.number().int().positive({
+  message: "surveyId must be a positive integer",
+});
 
 /**
  * GET /api/surveys/{surveyId}/responses/me
