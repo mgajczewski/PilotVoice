@@ -3,7 +3,7 @@ import Layout from "../../../layouts/Layout.astro";
 import { SurveyService, SurveyNotFoundError } from "../../../lib/services/surveyService";
 import { SurveyResponseService } from "../../../lib/services/surveyResponseService";
 import { SurveyFillForm } from "../../../components/survey/SurveyFillForm";
-import type { SurveyDto, CompetitionDto, SurveyResponseDto } from "../../../types";
+import type { SurveyResponseDto } from "../../../types";
 
 export const prerender = false;
 
@@ -52,7 +52,7 @@ try {
   <div class="container mx-auto px-4 py-8 md:py-12">
     <div class="max-w-3xl mx-auto">
       <SurveyFillForm
-        client:load
+        client:only="react"
         initialSurvey={survey}
         initialCompetition={competition}
         initialResponse={userResponse}

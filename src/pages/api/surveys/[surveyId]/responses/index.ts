@@ -29,7 +29,7 @@ export const prerender = false;
 export async function POST(context: APIContext): Promise<Response> {
   // Check authentication
   if (!context.locals.user) {
-    return new Response(JSON.stringify({ message: "Unauthorized" }), {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { "Content-Type": "application/json" },
     });
@@ -41,8 +41,8 @@ export async function POST(context: APIContext): Promise<Response> {
   if (!surveyIdValidation.success) {
     return new Response(
       JSON.stringify({
-        message: "Bad Request",
-        errors: surveyIdValidation.error.flatten(),
+        error: "Bad Request",
+        details: surveyIdValidation.error.flatten(),
       }),
       {
         status: 400,
@@ -58,8 +58,8 @@ export async function POST(context: APIContext): Promise<Response> {
   try {
     const text = await context.request.text();
     requestBody = text ? JSON.parse(text) : {};
-  } catch {
-    return new Response(JSON.stringify({ message: "Invalid JSON in request body" }), {
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Invalid JSON in request body" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
@@ -70,8 +70,8 @@ export async function POST(context: APIContext): Promise<Response> {
   if (!bodyValidation.success) {
     return new Response(
       JSON.stringify({
-        message: "Bad Request",
-        errors: bodyValidation.error.flatten(),
+        error: "Bad Request",
+        details: bodyValidation.error.flatten(),
       }),
       {
         status: 400,
@@ -99,14 +99,14 @@ export async function POST(context: APIContext): Promise<Response> {
   } catch (error) {
     // Handle specific error types
     if (error instanceof SurveyNotFoundError) {
-      return new Response(JSON.stringify({ message: error.message }), {
+      return new Response(JSON.stringify({ error: error.message }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
     }
 
     if (error instanceof DuplicateSurveyResponseError) {
-      return new Response(JSON.stringify({ message: error.message }), {
+      return new Response(JSON.stringify({ error: error.message }), {
         status: 409,
         headers: { "Content-Type": "application/json" },
       });
@@ -115,7 +115,7 @@ export async function POST(context: APIContext): Promise<Response> {
     // Log unexpected errors
     console.error("Error creating survey response:", error);
 
-    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
