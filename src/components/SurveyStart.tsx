@@ -7,6 +7,8 @@ interface SurveyStartProps {
   surveySlug: string;
 }
 
+const getSurveyFillUrl = (surveySlug: string) => `/surveys/${surveySlug}/fill`;
+
 export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(undefined);
   const [surveyResponse, setSurveyResponse] = useState<SurveyResponseDto | null | undefined>(undefined);
@@ -49,13 +51,13 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
   const handleStartSurvey = async () => {
     // User not logged in - redirect to login
     if (!isAuthenticated) {
-      window.location.href = `/login?redirect=/surveys/${surveySlug}`;
+      window.location.href = `/login?redirect_to=${getSurveyFillUrl(surveySlug)}`;
       return;
     }
 
     // User already started survey - redirect to form
     if (surveyResponse) {
-      window.location.href = `/surveys/${surveySlug}/fill`;
+      window.location.href = getSurveyFillUrl(surveySlug);
       return;
     }
 
@@ -76,7 +78,7 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
         const newResponse: SurveyResponseDto = await response.json();
         setSurveyResponse(newResponse);
         // Redirect to form
-        window.location.href = `/surveys/${surveySlug}/fill`;
+        window.location.href = getSurveyFillUrl(surveySlug);
       } else if (response.status === 401) {
         setError("Session expired. Please log in again.");
         setIsAuthenticated(false);
