@@ -1,14 +1,17 @@
 /// <reference types="astro/client" />
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "./db/supabase.client.ts";
 import type { Database } from "./db/database.types.ts";
-import type { User } from "@supabase/supabase-js";
 
 declare global {
   namespace App {
     interface Locals {
-      supabase: SupabaseClient<Database>;
-      user: User | null;
+      supabase: SupabaseClient;
+      user: {
+        id: string;
+        email: string;
+        role: Database["public"]["Enums"]["user_role"];
+      } | null;
     }
   }
 }
@@ -18,8 +21,9 @@ interface ImportMetaEnv {
   readonly SUPABASE_KEY: string;
   readonly OPENROUTER_API_KEY: string;
   readonly OPENROUTER_MODEL?: string;
+  readonly RECAPTCHA_SITE_KEY: string;
+  readonly RECAPTCHA_SECRET_KEY: string;
   readonly SITE?: string;
-  // more env variables...
 }
 
 interface ImportMeta {

@@ -8,13 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface UserProfileFormProps {
-  initialCivlId?: string | null;
+  initialCivlId?: number | null;
   initialRegistrationReason?: string | null;
 }
 
 export function UserProfileForm({ initialCivlId, initialRegistrationReason }: UserProfileFormProps) {
-  const [civlId, setCivlId] = useState(initialCivlId || "");
-  const [registrationReason, setRegistrationReason] = useState(initialRegistrationReason || "");
+  const [civlId, setCivlId] = useState(initialCivlId?.toString() ?? "");
+  const [registrationReason, setRegistrationReason] = useState(initialRegistrationReason ?? "");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,16 +30,28 @@ export function UserProfileForm({ initialCivlId, initialRegistrationReason }: Us
       return;
     }
 
+    // Validate CIVL ID if provided
+    if (civlId.trim() && (isNaN(Number(civlId)) || Number(civlId) <= 0 || !Number.isInteger(Number(civlId)))) {
+      setError("CIVL ID must be a positive integer");
+      return;
+    }
+
+    // Validate registration reason if provided
+    if (registrationReason.trim() && registrationReason.trim().length < 10) {
+      setError("Registration reason must be at least 10 characters long");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const response = await fetch("/api/user/profile", {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          civl_id: civlId.trim() || null,
+          civl_id: civlId.trim() ? Number(civlId) : null,
           registration_reason: registrationReason.trim() || null,
         }),
       });

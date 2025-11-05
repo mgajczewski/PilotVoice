@@ -1,6 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { RegisterForm } from "../components/auth/RegisterForm";
+
+const recaptchaSiteKey = import.meta.env.RECAPTCHA_SITE_KEY;
 ---
 
 <Layout
@@ -9,7 +11,7 @@ import { RegisterForm } from "../components/auth/RegisterForm";
 >
   <section class="min-h-[80vh] flex items-center justify-center px-4 py-16">
     <div class="w-full max-w-md">
-      <RegisterForm client:load />
+      <RegisterForm client:load recaptchaSiteKey={recaptchaSiteKey} />
     </div>
   </section>
 </Layout>

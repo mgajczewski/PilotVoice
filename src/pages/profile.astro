@@ -3,10 +3,22 @@ import Layout from "../layouts/Layout.astro";
 import { UserProfileForm } from "../components/auth/UserProfileForm";
 import { ChangePasswordForm } from "../components/auth/ChangePasswordForm";
 
-// In the future, these values will be fetched from the authenticated user
-// For now, we're just creating the UI structure
-const userCivlId = null;
-const userRegistrationReason = null;
+// Check if user is authenticated
+const { user } = Astro.locals;
+
+if (!user) {
+  return Astro.redirect("/login");
+}
+
+// Fetch user profile data
+const { data: profile } = await Astro.locals.supabase
+  .from("profiles")
+  .select("civl_id, registration_reason")
+  .eq("user_id", user.id)
+  .single();
+
+const userCivlId = profile?.civl_id ?? null;
+const userRegistrationReason = profile?.registration_reason ?? null;
 ---
 
 <Layout

@@ -1,5 +1,7 @@
 ---
 import { buttonVariants } from "./ui/button";
+
+const { user } = Astro.locals;
 ---
 
 <header class="border-b border-border bg-background">
@@ -15,8 +17,32 @@ import { buttonVariants } from "./ui/button";
 
     <!-- Navigation Buttons -->
     <div class="flex items-center gap-2 md:gap-4">
-      <a href="/login" class={buttonVariants({ variant: "ghost" })}> Sign In </a>
-      <a href="/register" class={buttonVariants()}> Sign Up </a>
+      {
+        user ? (
+          <>
+            {/* Authenticated Navigation */}
+            <span class="text-sm text-muted-foreground hidden md:inline">{user.email}</span>
+            <a href="/profile" class={buttonVariants({ variant: "ghost" })}>
+              My Profile
+            </a>
+            <form action="/api/auth/logout" method="POST" class="inline">
+              <button type="submit" class={buttonVariants({ variant: "outline" })}>
+                Sign Out
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            {/* Unauthenticated Navigation */}
+            <a href="/login" class={buttonVariants({ variant: "ghost" })}>
+              Sign In
+            </a>
+            <a href="/register" class={buttonVariants()}>
+              Sign Up
+            </a>
+          </>
+        )
+      }
     </div>
   </nav>
 </header>

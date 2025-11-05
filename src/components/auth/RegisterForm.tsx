@@ -1,12 +1,18 @@
 import * as React from "react";
 import { useState } from "react";
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  recaptchaSiteKey: string;
+}
+
+function RegisterFormContent() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -108,15 +114,23 @@ export function RegisterForm() {
       return;
     }
 
+    if (!executeRecaptcha) {
+      setError("reCAPTCHA not loaded. Please refresh the page.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
+      // Execute reCAPTCHA
+      const recaptchaToken = await executeRecaptcha("register");
+
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, recaptchaToken }),
       });
 
       if (!response.ok) {
@@ -231,6 +245,14 @@ export function RegisterForm() {
         </CardFooter>
       </form>
     </Card>
+  );
+}
+
+export function RegisterForm({ recaptchaSiteKey }: RegisterFormProps) {
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey}>
+      <RegisterFormContent />
+    </GoogleReCaptchaProvider>
   );
 }
 
