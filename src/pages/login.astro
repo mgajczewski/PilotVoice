@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { LoginForm } from "../components/auth/LoginForm";
+
+const redirectTo = Astro.url.searchParams.get("redirect_to") || undefined;
+const registered = Astro.url.searchParams.get("registered");
+---
+
+<Layout
+  title="Sign In - PilotVoice"
+  description="Sign in to your PilotVoice account to share feedback on paragliding competitions."
+>
+  <section class="min-h-[80vh] flex items-center justify-center px-4 py-16">
+    <div class="w-full max-w-md">
+      {
+        registered && (
+          <div class="mb-6 rounded-lg bg-secondary/10 border border-secondary/50 p-4">
+            <p class="text-sm text-secondary">
+              <strong>Account created successfully!</strong> Please sign in with your credentials.
+            </p>
+          </div>
+        )
+      }
+      <LoginForm client:load redirectTo={redirectTo} />
+    </div>
+  </section>
+</Layout>
+

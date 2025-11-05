@@ -1,0 +1,39 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { UserProfileForm } from "../components/auth/UserProfileForm";
+import { ChangePasswordForm } from "../components/auth/ChangePasswordForm";
+
+// In the future, these values will be fetched from the authenticated user
+// For now, we're just creating the UI structure
+const userCivlId = null;
+const userRegistrationReason = null;
+---
+
+<Layout
+  title="My Profile - PilotVoice"
+  description="Manage your PilotVoice account settings and profile information."
+>
+  <section class="min-h-[80vh] px-4 py-16">
+    <div class="container mx-auto max-w-3xl">
+      <!-- Page Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-2">My Profile</h1>
+        <p class="text-lg text-muted-foreground">Manage your account settings and personal information</p>
+      </div>
+
+      <!-- Profile Forms -->
+      <div class="space-y-6">
+        <!-- User Profile Form -->
+        <UserProfileForm
+          client:load
+          initialCivlId={userCivlId}
+          initialRegistrationReason={userRegistrationReason}
+        />
+
+        <!-- Change Password Form -->
+        <ChangePasswordForm client:load />
+      </div>
+    </div>
+  </section>
+</Layout>
+

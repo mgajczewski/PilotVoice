@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { RegisterForm } from "../components/auth/RegisterForm";
+---
+
+<Layout
+  title="Sign Up - PilotVoice"
+  description="Create your PilotVoice account to start sharing feedback on paragliding competitions."
+>
+  <section class="min-h-[80vh] flex items-center justify-center px-4 py-16">
+    <div class="w-full max-w-md">
+      <RegisterForm client:load />
+    </div>
+  </section>
+</Layout>
+
