@@ -1,150 +1,150 @@
 <architecture_analysis>
-1.  **Lista komponentów i stron:**
-    *   **Strony Astro:**
-        *   `strona /login`: Strona logowania.
-        *   `strona /register`: Strona rejestracji.
-        *   `strona /profile`: Strona profilu użytkownika (wymaga logowania).
-        *   `strona /` (Panel Główny): Strona główna, której wygląd zależy od stanu zalogowania.
-    *   **Layouty Astro:**
-        *   `AuthLayout.astro`: Layout dla stron autentykacji (`/login`, `/register`), zapewniający spójny wygląd.
-        *   `BaseLayout.astro`: Główny layout aplikacji, używany na większości stron. Będzie zawierał komponent `UserMenu`.
-    *   **Komponenty React (dynamiczne):**
-        *   `LoginForm.tsx`: Formularz logowania z polami na e-mail i hasło. Zarządza walidacją i wysyłką danych.
-        *   `RegisterForm.tsx`: Formularz rejestracji z polami na e-mail, hasło, potwierdzenie hasła i mechanizmem captcha.
-        *   `ProfileForm.tsx`: Formularz na stronie profilu do zmiany hasła i edycji numeru CIVL ID.
-        *   `UserMenu.tsx`: Komponent w nagłówku, wyświetlający status zalogowania, link do profilu i przycisk wylogowania.
-    *   **Komponenty UI (Shadcn/ui - statyczne/UI):**
-        *   `Input.tsx`: Pole do wprowadzania tekstu.
-        *   `Button.tsx`: Przycisk.
-        *   `Card.tsx`: Komponent-kontener dla formularzy.
-        *   `Label.tsx`: Etykieta dla pól formularza.
-    *   **Endpointy API (Astro):**
-        *   `/api/auth/login`: Endpoint do obsługi logowania.
-        *   `/api/auth/register`: Endpoint do obsługi rejestracji.
-        *   `/api/auth/logout`: Endpoint do obsługi wylogowania.
-        *   `/api/user/profile`: Endpoint do aktualizacji profilu użytkownika.
-    *   **Middleware (Astro):**
-        *   `src/middleware/index.ts`: Middleware do sprawdzania sesji użytkownika i ochrony tras.
 
-2.  **Główne strony i ich komponenty:**
-    *   **Strona `/login`**: Używa `AuthLayout.astro` i renderuje komponent `LoginForm.tsx`.
-    *   **Strona `/register`**: Używa `AuthLayout.astro` i renderuje komponent `RegisterForm.tsx`.
-    *   **Strona `/profile`**: Używa `BaseLayout.astro`, jest chroniona przez middleware i renderuje komponent `ProfileForm.tsx`.
-    *   **Strona `/` (Panel Główny)**: Używa `BaseLayout.astro`, który zawiera `UserMenu.tsx`.
+### 1. Komponenty, strony i layouty
 
-3.  **Przepływ danych:**
-    *   Użytkownik wchodzi na stronę `/login` lub `/register`.
-    *   Komponent formularza (React) obsługuje wprowadzanie danych i walidację po stronie klienta.
-    *   Po wysłaniu formularza, dane są przesyłane do odpowiedniego endpointu API (`/api/auth/...`).
-    *   Endpoint API (Astro) komunikuje się z bazą danych (Supabase), przetwarza żądanie (logowanie/rejestracja) i tworzy sesję, zazwyczaj poprzez ustawienie bezpiecznego ciasteczka (cookie) `httpOnly`.
-    *   Po pomyślnej autentykacji, klient jest przekierowywany na stronę główną.
-    *   `Middleware` na serwerze sprawdza ciasteczko sesji przy każdym żądaniu do chronionych stron (np. `/profile`) i albo pozwala na dostęp, albo przekierowuje na `/login`.
-    *   Komponent `UserMenu.tsx` w `BaseLayout.astro` odczytuje stan zalogowania (np. z `Astro.locals` przekazanego z middleware) i odpowiednio renderuje interfejs (np. "Witaj, Użytkowniku" lub "Zaloguj się").
+Na podstawie dokumentacji `prd.en.md` oraz `auth-spec.en.md` zidentyfikowano następujące elementy biorące udział w procesie autentykacji i zarządzania użytkownikiem:
 
-4.  **Opis funkcjonalności komponentów:**
-    *   `LoginForm.tsx`: Odpowiedzialny za zebranie e-maila i hasła, walidację i komunikację z API w celu zalogowania użytkownika.
-    *   `RegisterForm.tsx`: Zbiera dane rejestracyjne, weryfikuje je i wysyła do API w celu utworzenia nowego konta. Integruje się z captcha.
-    *   `ProfileForm.tsx`: Umożliwia zalogowanemu użytkownikowi zmianę hasła i danych profilowych poprzez interakcję z API.
-    *   `UserMenu.tsx`: Wyświetla stan autentykacji i nawigację związaną z kontem użytkownika.
-    *   `AuthLayout.astro`: Zapewnia spójny szkielet wizualny dla stron logowania i rejestracji.
-    *   `BaseLayout.astro`: Główny layout aplikacji.
-    *   Endpointy API: Logika serwerowa dla operacji na użytkownikach i sesjach.
-    *   `Middleware`: Centralny punkt do zarządzania dostępem do stron na podstawie sesji.
+**Layouty (`./src/layouts`):**
+
+*   `Layout.astro`: Główny layout aplikacji, który warunkowo renderuje elementy nawigacji w zależności od statusu zalogowania użytkownika (dane z `Astro.locals.user`).
+
+**Strony (`./src/pages`):**
+
+*   `/login.astro`: Publiczna strona z formularzem logowania.
+*   `/register.astro`: Publiczna strona z formularzem rejestracji.
+*   `/forgot-password.astro`: Publiczna strona z formularzem do resetowania hasła.
+*   `/update-password.astro`: Publiczna strona do ustawiania nowego hasła po resecie.
+*   `/profile.astro`: Chroniona strona do zarządzania profilem użytkownika (dostępna po zalogowaniu).
+
+**Komponenty React (`./src/components`):**
+
+*   `RegisterForm.tsx`: Formularz rejestracji z walidacją po stronie klienta.
+*   `LoginForm.tsx`: Formularz logowania.
+*   `ForgotPasswordForm.tsx`: Formularz do inicjowania odzyskiwania hasła.
+*   `UpdatePasswordForm.tsx`: Formularz do ustawiania nowego hasła.
+*   `UserProfileForm.tsx`: Formularz do zarządzania danymi profilu (CIVL ID).
+*   `ChangePasswordForm.tsx`: Formularz do zmiany hasła przez zalogowanego użytkownika.
+*   `UserMenu.tsx` (wewnątrz `Layout.astro`): Komponent wyświetlający menu użytkownika (Profil, Wyloguj) lub linki do logowania/rejestracji.
+
+**API Endpoints (`./src/pages/api/auth`):**
+
+*   `POST /api/auth/register.ts`: Obsługuje rejestrację nowego użytkownika.
+*   `POST /api/auth/login.ts`: Obsługuje logowanie użytkownika i ustawia cookie sesyjne.
+*   `POST /api/auth/logout.ts`: Obsługuje wylogowanie i czyści cookie sesyjne.
+*   `POST /api/auth/forgot-password.ts`: Wysyła email z linkiem do resetu hasła.
+
+**Middleware (`./src/middleware/index.ts`):**
+
+*   Centralny punkt systemu autentykacji. Uruchamia się przy każdym żądaniu, weryfikuje sesję użytkownika na podstawie cookies i udostępnia dane użytkownika w `Astro.locals`. Chroni strony wymagające zalogowania.
+
+### 2. Przepływ danych w procesie logowania
+
+1.  Użytkownik wchodzi na stronę `/login.astro`.
+2.  Strona renderuje komponent `LoginForm.tsx`.
+3.  Użytkownik wypełnia formularz. Komponent `LoginForm.tsx` waliduje dane po stronie klienta.
+4.  Po wysłaniu formularza, `LoginForm.tsx` wysyła żądanie `POST` do endpointu `/api/auth/login.ts` z emailem i hasłem.
+5.  Endpoint `/api/auth/login.ts` komunikuje się z Supabase Auth w celu weryfikacji poświadczeń.
+6.  Jeśli logowanie się powiedzie, Supabase ustawia w odpowiedzi nagłówek `Set-Cookie` z tokenem sesji.
+7.  Endpoint API zwraca odpowiedź `200 OK`, a frontend przekierowuje użytkownika na stronę główną.
+8.  Przy kolejnych żądaniach do aplikacji, middleware (`/src/middleware/index.ts`) przechwytuje żądanie.
+9.  Middleware odczytuje cookie sesyjne, weryfikuje je w Supabase i jeśli jest poprawne, umieszcza dane użytkownika w `Astro.locals.user`.
+10. `Layout.astro` odczytuje `Astro.locals.user` i renderuje `UserMenu.tsx` w stanie "zalogowany", wyświetlając opcje profilu i wylogowania.
+
+### 3. Przepływ danych w procesie rejestracji
+
+1.  Użytkownik wchodzi na stronę `/register.astro`.
+2.  Strona renderuje komponent `RegisterForm.tsx`.
+3.  Użytkownik wypełnia formularz (email, hasło, captcha). Komponent waliduje dane.
+4.  Po wysłaniu, `RegisterForm.tsx` wysyła żądanie `POST` do `/api/auth/register.ts`.
+5.  Endpoint API waliduje dane (np. za pomocą Zod) i wywołuje `supabase.auth.signUp()`.
+6.  Jeśli rejestracja się powiedzie, Supabase tworzy nowego użytkownika. Użytkownik jest automatycznie zalogowany (sesja jest tworzona).
+7.  Frontend przekierowuje użytkownika na stronę główną, gdzie `Layout.astro` i `UserMenu.tsx` pokazują stan "zalogowany".
+
 </architecture_analysis>
-
 <mermaid_diagram>
 ```mermaid
 flowchart TD
-    classDef astroComponent fill:#FF5E00,stroke:#333,stroke-width:2px,color:#fff;
-    classDef reactComponent fill:#61DAFB,stroke:#333,stroke-width:2px,color:#000;
     classDef page fill:#8A2BE2,stroke:#333,stroke-width:2px,color:#fff;
+    classDef reactComponent fill:#61DAFB,stroke:#333,stroke-width:2px,color:#000;
+    classDef astroComponent fill:#FF5E00,stroke:#333,stroke-width:2px,color:#fff;
     classDef api fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff;
-    classDef uiComponent fill:#f9f9f9,stroke:#ddd,stroke-width:2px,color:#333;
     classDef middleware fill:#FFC107,stroke:#333,stroke-width:2px,color:#000;
     classDef database fill:#f29111,stroke:#333,stroke-width:2px,color:#fff;
 
     subgraph "Strony Publiczne - Przeglądarka"
-        LoginPage["/login"]:::page
-        RegisterPage["/register"]:::page
+        direction LR
+        P_Login["/login.astro"]:::page
+        P_Register["/register.astro"]:::page
+        P_ForgotPassword["/forgot-password.astro"]:::page
+        P_UpdatePassword["/update-password.astro"]:::page
     end
     
+    subgraph "Komponenty Formularzy (React) - Przeglądarka"
+        C_LoginForm["LoginForm.tsx"]:::reactComponent
+        C_RegisterForm["RegisterForm.tsx"]:::reactComponent
+        C_ForgotPasswordForm["ForgotPasswordForm.tsx"]:::reactComponent
+        C_UpdatePasswordForm["UpdatePasswordForm.tsx"]:::reactComponent
+    end
+
     subgraph "Strony Chronione - Przeglądarka"
-        ProfilePage["/profile"]:::page
-        HomePage["/ (Panel Główny)"]:::page
+        P_Profile["/profile.astro"]:::page
     end
 
-    subgraph "Komponenty UI (Shadcn) - Przeglądarka"
-        Input[Input.tsx]:::uiComponent
-        Button[Button.tsx]:::uiComponent
-        Card[Card.tsx]:::uiComponent
-        Label[Label.tsx]:::uiComponent
+    subgraph "Komponenty Użytkownika (React) - Przeglądarka"
+        C_ProfileForm["UserProfileForm.tsx"]:::reactComponent
+        C_ChangePasswordForm["ChangePasswordForm.tsx"]:::reactComponent
+        C_UserMenu["UserMenu.tsx"]:::reactComponent
     end
-
-    subgraph "Warstwa Prezentacji (Astro) - Serwer"
-        direction TB
-        
-        subgraph "Layouts"
-            AuthLayout["AuthLayout.astro"]:::astroComponent
-            BaseLayout["BaseLayout.astro"]:::astroComponent
-        end
-
-        subgraph "Komponenty Dynamiczne (React)"
-            LoginForm["LoginForm.tsx"]:::reactComponent
-            RegisterForm["RegisterForm.tsx"]:::reactComponent
-            ProfileForm["ProfileForm.tsx"]:::reactComponent
-            UserMenu["UserMenu.tsx"]:::reactComponent
-        end
-    end
-
-    subgraph "Warstwa Logiki (Astro API & Middleware) - Serwer"
-        direction TB
-        MW["Middleware"]:::middleware
-        
-        subgraph "API Endpoints"
-            LoginApi["/api/auth/login"]:::api
-            RegisterApi["/api/auth/register"]:::api
-            LogoutApi["/api/auth/logout"]:::api
-            ProfileApi["/api/user/profile"]:::api
-        end
-    end
-
-    subgraph "Warstwa Danych - Serwer"
-        DB[(Supabase)]:::database
-    end
-
-    %% Relacje Stron i Layoutów
-    LoginPage -- Używa --> AuthLayout
-    RegisterPage -- Używa --> AuthLayout
-    ProfilePage -- Używa --> BaseLayout
-    HomePage -- Używa --> BaseLayout
     
-    %% Relacje Stron i Komponentów React
-    LoginPage -- Renderuje --> LoginForm
-    RegisterPage -- Renderuje --> RegisterForm
-    ProfilePage -- Renderuje --> ProfileForm
-    BaseLayout -- Zawiera --> UserMenu
+    subgraph "Infrastruktura Aplikacji - Serwer"
+        direction TB
+        L_Layout["Layout.astro"]:::astroComponent
+        MW["Middleware (index.ts)"]:::middleware
+    end
+        
+    subgraph "API Endpoints - Serwer"
+        API_Login["POST /api/auth/login"]:::api
+        API_Register["POST /api/auth/register"]:::api
+        API_Logout["POST /api/auth/logout"]:::api
+        API_ForgotPassword["POST /api/auth/forgot-password"]:::api
+    end
 
-    %% Relacje Komponentów React i UI
-    LoginForm -- Używa --> Input & Button & Card & Label
-    RegisterForm -- Używa --> Input & Button & Card & Label
-    ProfileForm -- Używa --> Input & Button & Card & Label
+    subgraph "Usługi Zewnętrzne - Serwer"
+        DB_Supabase["Supabase Auth"]:::database
+    end
+    
+    %% Relacje - Strony i Komponenty
+    P_Login -- "Renderuje" --> C_LoginForm
+    P_Register -- "Renderuje" --> C_RegisterForm
+    P_ForgotPassword -- "Renderuje" --> C_ForgotPasswordForm
+    P_UpdatePassword -- "Renderuje" --> C_UpdatePasswordForm
+    P_Profile -- "Renderuje" --> C_ProfileForm
+    P_Profile -- "Renderuje" --> C_ChangePasswordForm
+    
+    %% Relacje - Layout
+    P_Login -- "Używa" --> L_Layout
+    P_Register -- "Używa" --> L_Layout
+    P_Profile -- "Używa" --> L_Layout
+    L_Layout -- "Renderuje" --> C_UserMenu
+    
+    %% Przepływ Autentykacji
+    C_LoginForm -- "Wysyła dane logowania" --> API_Login
+    C_RegisterForm -- "Wysyła dane rejestracji" --> API_Register
+    C_UserMenu -- "Inicjuje wylogowanie" --> API_Logout
+    C_ForgotPasswordForm -- "Wysyła email" --> API_ForgotPassword
+    
+    API_Login -- "Weryfikuje poświadczenia" --> DB_Supabase
+    API_Register -- "Tworzy użytkownika" --> DB_Supabase
+    API_Logout -- "Kończy sesję" --> DB_Supabase
+    API_ForgotPassword -- "Wysyła email przez" --> DB_Supabase
+    
+    DB_Supabase -- "Ustawia Cookie sesyjne" --> API_Login
+    DB_Supabase -- "Ustawia Cookie sesyjne" --> API_Register
 
-    %% Przepływ danych (Frontend -> Backend)
-    LoginForm -- "Wyślij dane" --> LoginApi
-    RegisterForm -- "Wyślij dane" --> RegisterApi
-    ProfileForm -- "Wyślij dane" --> ProfileApi
-    UserMenu -- "Wyloguj" --> LogoutApi
+    %% Middleware
+    P_Profile -- "Żądanie dostępu" --> MW
+    MW -- "Weryfikuje sesję z" --> DB_Supabase
+    MW -- "Udostępnia 'Astro.locals.user'" --> L_Layout
 
-    %% Ochrona tras (Middleware)
-    ProfilePage -- "Wymaga sesji" --> MW
-    HomePage -- "Wymaga sesji (opcjonalnie)" --> MW
-    MW -- "Sprawdza sesję" --> LoginApi
-    MW -- "Przekierowuje na /login" --x LoginPage
-
-    %% Relacje z bazą danych
-    LoginApi -- "Weryfikuje użytkownika" --> DB
-    RegisterApi -- "Tworzy użytkownika" --> DB
-    ProfileApi -- "Aktualizuje dane" --> DB
-    LogoutApi -- "Usuwa sesję" --> DB
 ```
 </mermaid_diagram>
