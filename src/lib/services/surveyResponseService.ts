@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "../../db/supabase.client.ts";
 import type { CreateSurveyResponseCommand, SurveyResponseDto, UpdateSurveyResponseCommand } from "../../types.ts";
-import { anonymizeFeedback, AnonymizationError } from "./anonymizationService.ts";
+import { AnonymizationService, AnonymizationError } from "./anonymizationService.ts";
 import { SUPABASE_ERROR_CODES } from "../constants/supabaseErrors.ts";
 
 /**
@@ -67,7 +67,6 @@ export const findUserResponse = async (
     if (surveyError.code === SUPABASE_ERROR_CODES.NOT_FOUND) {
       throw new SurveyNotFoundError(surveyId);
     }
-    console.error("Error checking survey existence:", surveyError);
     throw new Error("Failed to check survey existence");
   }
 
@@ -84,7 +83,6 @@ export const findUserResponse = async (
     .maybeSingle();
 
   if (responseError) {
-    console.error("Error fetching survey response:", responseError);
     throw new Error("Failed to fetch survey response");
   }
 
@@ -117,7 +115,6 @@ export const createSurveyResponse = async (
     if (surveyError.code === SUPABASE_ERROR_CODES.NOT_FOUND) {
       throw new SurveyNotFoundError(surveyId);
     }
-    console.error("Error checking survey existence:", surveyError);
     throw new Error("Failed to check survey existence");
   }
 
@@ -141,7 +138,6 @@ export const createSurveyResponse = async (
     if (insertError.code === SUPABASE_ERROR_CODES.UNIQUE_VIOLATION) {
       throw new DuplicateSurveyResponseError(surveyId, userId);
     }
-    console.error("Error creating survey response:", insertError);
     throw new Error("Failed to create survey response");
   }
 
@@ -180,7 +176,6 @@ export const updateSurveyResponse = async (
     .maybeSingle();
 
   if (fetchError) {
-    console.error("Error fetching survey response:", fetchError);
     throw new Error("Failed to fetch survey response");
   }
 
@@ -212,16 +207,18 @@ export const updateSurveyResponse = async (
     if (command.open_feedback === null) {
       updateData.open_feedback = null;
     } else {
-      // Anonymize the feedback
+      // Check and anonymize the feedback (US-007)
       try {
-        const anonymizedFeedback = await anonymizeFeedback(command.open_feedback);
-        updateData.open_feedback = anonymizedFeedback;
+        const gdprResult = await AnonymizationService.checkAndAnonymize(command.open_feedback);
+        // Always store the anonymized version (or original if no PII detected)
+        updateData.open_feedback = gdprResult.anonymizedText || gdprResult.originalText;
       } catch (error) {
         // Re-throw anonymization errors
         if (error instanceof AnonymizationError) {
+          console.error(`Anonymization error for survey response ${responseId}`, error);
           throw error;
         }
-        console.error("Unexpected error during anonymization:", error);
+        console.error(`Unknown error during anonymization for survey response ${responseId}`, error);
         throw new AnonymizationError(error instanceof Error ? error.message : "Unknown error");
       }
     }
@@ -236,7 +233,6 @@ export const updateSurveyResponse = async (
     .single();
 
   if (updateError) {
-    console.error("Error updating survey response:", updateError);
     throw new Error("Failed to update survey response");
   }
 
