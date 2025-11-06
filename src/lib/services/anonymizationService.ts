@@ -1,7 +1,11 @@
 /**
  * Service for anonymizing user feedback using OpenRouter AI.
  * This ensures GDPR compliance by removing personal information from feedback.
+ * @server-only This service must only be used on the server-side
  */
+
+import { OpenRouterService } from "./openrouter/openrouterService";
+import type { JSONSchema } from "./openrouter/types";
 
 /**
  * Custom error class for anonymization failures
@@ -14,100 +18,190 @@ export class AnonymizationError extends Error {
 }
 
 /**
- * Anonymizes user feedback by removing personal information while preserving meaning and tone.
- * Uses OpenRouter API with Claude 3.5 Sonnet model.
- *
- * @param text - The feedback text to anonymize
- * @returns The anonymized text
- * @throws {AnonymizationError} If the API call fails or times out
+ * Response from GDPR check and anonymization
  */
-export const anonymizeFeedback = async (text: string): Promise<string> => {
+export interface GdprCheckResult {
+  /** Whether the text contains personal data that should be anonymized */
+  containsPersonalData: boolean;
+  /** Confidence level (0-1) in the detection */
+  confidence: number;
+  /** The original user-submitted text */
+  originalText: string;
+  /** The anonymized version (null if no personal data detected) */
+  anonymizedText: string | null;
+  /** Types of personal data detected (e.g., ['full_name', 'email']) */
+  detectedDataTypes?: string[];
+}
+
+/**
+ * Response schema for personal data detection
+ */
+interface PersonalDataDetectionResponse {
+  containsPersonalData: boolean;
+  confidence: number;
+  detectedDataTypes: string[];
+  explanation: string;
+}
+
+/**
+ * Response schema for anonymization
+ */
+interface AnonymizationResponse {
+  anonymizedText: string;
+}
+
+/**
+ * Checks if text contains personal data and returns anonymized version if needed.
+ * This method implements US-007 requirements.
+ *
+ * @param text - The feedback text to check
+ * @returns GdprCheckResult with detection and anonymization details
+ * @throws {AnonymizationError} If the API call fails
+ */
+export const checkAndAnonymize = async (text: string): Promise<GdprCheckResult> => {
   // Guard clause: handle empty or null text
   if (!text || text.trim().length === 0) {
-    return text;
+    return {
+      containsPersonalData: false,
+      confidence: 1.0,
+      originalText: text,
+      anonymizedText: null,
+    };
   }
 
-  // Guard clause: check for API key
-  const apiKey = import.meta.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new AnonymizationError("OPENROUTER_API_KEY is not configured");
-  }
+  try {
+    const openRouter = new OpenRouterService();
+    const model = import.meta.env.OPENROUTER_MODEL || "anthropic/claude-3.5-sonnet";
 
-  const model = import.meta.env.OPENROUTER_MODEL || "anthropic/claude-3.5-sonnet";
+    // Step 1: Detect if text contains personal data
+    const detectionSchema: JSONSchema = {
+      type: "object",
+      properties: {
+        containsPersonalData: {
+          type: "boolean",
+          description: "Whether the text contains personal data (names, emails, phone numbers, etc.)",
+        },
+        confidence: {
+          type: "number",
+          description: "Confidence level between 0 and 1",
+        },
+        detectedDataTypes: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description: "Types of personal data detected (e.g., 'full_name', 'email', 'phone')",
+        },
+        explanation: {
+          type: "string",
+          description: "Brief explanation of what personal data was detected",
+        },
+      },
+      required: ["containsPersonalData", "confidence", "detectedDataTypes", "explanation"],
+      additionalProperties: false,
+    };
 
-  const systemPrompt = `You are an anonymization assistant. Your task is to anonymize user feedback while preserving the meaning and tone.
+    const detectionSystemPrompt = `You are a GDPR compliance assistant. Your task is to detect personal data in user feedback.
+
+Personal data includes:
+- Full names or identifiable names (first name + last name, or unique nicknames)
+- Email addresses
+- Phone numbers
+- Physical addresses
+- Government IDs or passport numbers
+- Any other information that could identify a specific person
+
+Rules:
+- Generic terms like "the pilot", "the organizer", "someone" are NOT personal data
+- Single common first names without context may not be personal data
+- Be conservative: when in doubt about identification, mark as potential personal data
+- Provide confidence score based on how certain you are`;
+
+    const detectionUserPrompt = `Analyze this text for personal data:\n\n${text}`;
+
+    const detectionResult = await openRouter.getStructuredCompletion<PersonalDataDetectionResponse>({
+      model,
+      systemPrompt: detectionSystemPrompt,
+      userPrompt: detectionUserPrompt,
+      responseSchema: {
+        name: "personal_data_detection",
+        schema: detectionSchema,
+      },
+      temperature: 0.3,
+      maxTokens: 200,
+    });
+
+    console.log("Detection result:", detectionResult);
+
+    // Step 2: If personal data detected, anonymize the text
+    let anonymizedText: string | null = null;
+
+    if (detectionResult.containsPersonalData) {
+      const anonymizationSchema: JSONSchema = {
+        type: "object",
+        properties: {
+          anonymizedText: {
+            type: "string",
+            description: "The anonymized version of the input text",
+          },
+        },
+        required: ["anonymizedText"],
+        additionalProperties: false,
+      };
+
+      const anonymizationSystemPrompt = `You are an anonymization assistant. Your task is to anonymize user feedback while preserving the meaning and tone.
 
 Rules:
 - Remove or replace all personal names with generic terms (e.g., "the pilot", "the organizer", "a participant")
+- Replace emails with generic descriptions (e.g., "the contact email")
+- Replace phone numbers with generic descriptions (e.g., "the phone number")
 - Preserve the sentiment and key points of the feedback
 - Keep the same language as the input
-- Return only the anonymized text, no additional commentary
+- Maintain natural flow and readability
 - Do not add any explanations or meta-commentary about the anonymization process`;
 
-  const userPrompt = `Feedback to anonymize:\n${text}`;
+      const anonymizationUserPrompt = `Anonymize this feedback:\n\n${text}`;
 
-  try {
-    // Create abort controller for timeout (10 seconds)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": import.meta.env.SITE || "https://pilotvoice.app",
-        "X-Title": "PilotVoice",
-      },
-      body: JSON.stringify({
+      const anonymizationResult = await openRouter.getStructuredCompletion<AnonymizationResponse>({
         model,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-      }),
-      signal: controller.signal,
-    });
+        systemPrompt: anonymizationSystemPrompt,
+        userPrompt: anonymizationUserPrompt,
+        responseSchema: {
+          name: "text_anonymization",
+          schema: anonymizationSchema,
+        },
+        temperature: 0.5,
+        maxTokens: 1000,
+      });
 
-    clearTimeout(timeoutId);
+      console.log("Anonymization result:", anonymizationResult);
 
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "Unknown error");
-      throw new AnonymizationError(`OpenRouter API returned status ${response.status}: ${errorText}`);
+      anonymizedText = anonymizationResult.anonymizedText.trim();
+
+      // Validate we got a non-empty response
+      if (!anonymizedText || anonymizedText.length === 0) {
+        throw new AnonymizationError("OpenRouter API returned empty anonymized text");
+      }
     }
 
-    const data = await response.json();
-
-    // Validate response structure
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new AnonymizationError("Invalid response structure from OpenRouter API");
-    }
-
-    const anonymizedText = data.choices[0].message.content;
-
-    // Validate we got a non-empty response
-    if (!anonymizedText || anonymizedText.trim().length === 0) {
-      throw new AnonymizationError("OpenRouter API returned empty response");
-    }
-
-    return anonymizedText.trim();
+    return {
+      containsPersonalData: detectionResult.containsPersonalData,
+      confidence: detectionResult.confidence,
+      originalText: text,
+      anonymizedText,
+      detectedDataTypes: detectionResult.detectedDataTypes,
+    };
   } catch (error) {
-    // Handle abort (timeout)
-    if (error instanceof Error && error.name === "AbortError") {
-      throw new AnonymizationError("Request timed out after 10 seconds");
-    }
-
     // Re-throw AnonymizationError as-is
     if (error instanceof AnonymizationError) {
       throw error;
     }
 
     // Handle other errors
-    console.error("Anonymization error:", error);
     throw new AnonymizationError(error instanceof Error ? error.message : "Unknown error occurred");
   }
 };
 
 export const AnonymizationService = {
-  anonymizeFeedback,
+  checkAndAnonymize,
 };
