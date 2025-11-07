@@ -165,7 +165,7 @@ Choose the setup method that matches your environment:
 3. **Navigate to your project:**
    ```bash
    # Option 1: Access Windows files (note: slower I/O performance)
-   cd /mnt/c/Users/YOUR_USERNAME/Work/10xdevs/PilotVoice
+   cd /mnt/c/path/to/your/pilot-voice
    
    # Option 2: Clone in WSL filesystem (recommended for better performance)
    cd ~
