@@ -282,6 +282,76 @@ Tests are designed to run in CI environments:
 - E2E tests are optimized for CI with proper retries and parallelization
 - Coverage reports are generated for monitoring test quality
 
+## Setup Files
+
+### Test Setup (`test/setup.ts`)
+
+The setup file configures:
+- React Testing Library cleanup
+- `window.matchMedia` mock
+- `IntersectionObserver` mock
+- `ResizeObserver` mock
+- Jest-DOM custom matchers
+
+### E2E Fixtures (`e2e/fixtures/index.ts`)
+
+Provides pre-configured page objects:
+- `homePage`: HomePage instance
+- `loginPage`: LoginPage instance
+
+## Common Patterns
+
+### Mocking Supabase
+
+```typescript
+vi.mock('@/db/supabase.client', () => ({
+  createClient: vi.fn(() => ({
+    auth: {
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+      getSession: vi.fn(),
+    },
+    from: vi.fn(() => ({
+      select: vi.fn(),
+      insert: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+    })),
+  })),
+}));
+```
+
+### Generating Test Data with Faker
+
+```typescript
+import { faker } from '@faker-js/faker';
+
+const mockUser = {
+  id: faker.string.uuid(),
+  email: faker.internet.email(),
+  name: faker.person.fullName(),
+  createdAt: faker.date.past(),
+};
+```
+
+### Testing Astro Components
+
+Astro components are server-side rendered, so they should be tested with E2E tests using Playwright rather than unit tests.
+
+## Troubleshooting
+
+### Vitest Issues
+
+1. **Module resolution errors**: Check `vitest.config.ts` aliases
+2. **jsdom errors**: Ensure `environment: 'jsdom'` is set
+3. **Mock not working**: Check mock factory is at top level
+
+### Playwright Issues
+
+1. **Browser not found**: Run `npx playwright install chromium`
+2. **Timeout errors**: Increase timeout in `playwright.config.ts`
+3. **Web server issues**: Check `baseURL` and ensure dev server runs
+
 ## Resources
 
 - [Vitest Documentation](https://vitest.dev/)
