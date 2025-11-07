@@ -11,6 +11,11 @@ PilotVoice is a web application for the paragliding community, designed to syste
 - [Getting Started Locally](#getting-started-locally)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+- [Supabase Setup](#supabase-setup)
+  - [Option 1: Using Online Supabase](#option-1-using-online-supabase)
+  - [Option 2: Local Supabase Instance](#option-2-local-supabase-instance)
+    - [Method A: Using Docker Desktop](#method-a-using-docker-desktop-windowsmaclinux)
+    - [Method B: Using WSL + Docker](#method-b-using-wsl--docker-windows-without-docker-desktop)
 - [Available Scripts](#available-scripts)
 - [Project Scope (MVP)](#project-scope-mvp)
   - [Key Features](#key-features)
@@ -34,7 +39,7 @@ Follow these instructions to get the project up and running on your local machin
 
 - **Node.js**: `v22.14.0` (it's recommended to use a version manager like [nvm](https://github.com/nvm-sh/nvm))
 - **npm**: version 10 or higher
-- **Supabase Account**: You will need a Supabase project to connect to the database and authentication.
+- **Supabase Database**: You will need access to a Supabase database (either online or local). See [Supabase Setup](#supabase-setup) below for configuration options.
 
 ### Installation
 
@@ -60,10 +65,10 @@ Follow these instructions to get the project up and running on your local machin
     ```bash
     cp .env.example .env
     ```
-    Populate the `.env` file with your Supabase project credentials.
+    Populate the `.env` file with your Supabase project credentials (see [Supabase Setup](#supabase-setup) for details):
     ```env
-    PUBLIC_SUPABASE_URL="YOUR_SUPABASE_URL"
-    PUBLIC_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+    SUPABASE_URL="YOUR_SUPABASE_URL"
+    SUPABASE_KEY="YOUR_SUPABASE_KEY"
     ```
 
 5.  **Run the development server:**
@@ -71,6 +76,151 @@ Follow these instructions to get the project up and running on your local machin
     npm run dev
     ```
     The application will be available at `http://localhost:3000`.
+
+## Supabase Setup
+
+The application requires access to a Supabase database for authentication and data storage. You can use either:
+- **Option 1**: Online Supabase project (recommended for quick start)
+- **Option 2**: Local Supabase instance (recommended for development)
+
+### Option 1: Using Online Supabase
+
+1. Create a free account at [supabase.com](https://supabase.com)
+2. Create a new project
+3. Go to Project Settings → API
+4. Copy the Project URL and anon/public key to your `.env` file:
+   ```env
+   SUPABASE_URL="https://your-project.supabase.co"
+   SUPABASE_KEY="your-supabase-key"
+   ```
+5. Apply database migrations:
+   - Go to SQL Editor in your Supabase dashboard
+   - Run the migration files from `supabase/migrations/` in order
+
+### Option 2: Local Supabase Instance
+
+Choose the setup method that matches your environment:
+
+#### Method A: Using Docker Desktop (Windows/Mac/Linux)
+
+**Prerequisites:**
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- Supabase CLI
+
+**Steps:**
+
+1. **Install Supabase CLI:**
+   ```bash
+   npm install -g supabase
+   ```
+
+2. **Start local Supabase:**
+   ```bash
+   supabase start
+   ```
+   
+   This will start all Supabase services in Docker containers. The first run may take a few minutes to download images.
+
+3. **Copy the credentials from the output to your `.env` file:**
+   ```env
+   SUPABASE_URL="http://localhost:54321"
+   SUPABASE_KEY="your-local-key-from-output"
+   ```
+
+4. **Apply migrations:**
+   Migrations from `supabase/migrations/` are automatically applied on start.
+
+5. **Access Supabase Studio:**
+   Open `http://localhost:54323` in your browser to access the local Supabase dashboard.
+
+6. **Stop Supabase:**
+   ```bash
+   supabase stop
+   ```
+
+#### Method B: Using WSL + Docker (Windows without Docker Desktop)
+
+**Prerequisites:**
+- WSL 2 with Ubuntu (or another Linux distribution)
+- Docker installed in WSL
+
+**Steps:**
+
+1. **Set up Docker in WSL (if not already installed):**
+   ```bash
+   # In WSL Ubuntu terminal
+   curl -fsSL https://get.docker.com -o get-docker.sh
+   sudo sh get-docker.sh
+   sudo usermod -aG docker $USER
+   
+   # Start Docker daemon
+   sudo service docker start
+   ```
+
+2. **Install Supabase CLI in WSL:**
+   ```bash
+   npm install -g supabase
+   ```
+
+3. **Navigate to your project:**
+   ```bash
+   # Option 1: Access Windows files (note: slower I/O performance)
+   cd /mnt/c/Users/YOUR_USERNAME/Work/10xdevs/PilotVoice
+   
+   # Option 2: Clone in WSL filesystem (recommended for better performance)
+   cd ~
+   git clone https://github.com/mgajczewski/pilot-voice.git
+   cd pilot-voice
+   npm install
+   ```
+
+4. **Start local Supabase:**
+   ```bash
+   supabase start
+   ```
+
+5. **Copy the credentials from the output to your `.env` file:**
+   ```env
+   SUPABASE_URL="http://localhost:54321"
+   SUPABASE_KEY="your-local-key-from-output"
+   ```
+   
+   **Note:** If your project is in Windows filesystem (`/mnt/c/...`), edit the `.env` file using Windows tools or WSL editor.
+
+6. **Apply migrations:**
+   Migrations from `supabase/migrations/` are automatically applied on start.
+
+7. **Access Supabase Studio:**
+   Open `http://localhost:54323` in your browser (accessible from both Windows and WSL).
+
+8. **Important notes for WSL:**
+   - Docker daemon doesn't start automatically in WSL. You may need to run `sudo service docker start` after each WSL restart.
+   - To auto-start Docker, add to `~/.bashrc` or `~/.zshrc`:
+     ```bash
+     if ! service docker status > /dev/null 2>&1; then
+         sudo service docker start > /dev/null 2>&1
+     fi
+     ```
+
+### Useful Supabase Commands
+
+```bash
+# Start Supabase
+supabase start
+
+# Stop Supabase
+supabase stop
+
+# Reset database (applies all migrations)
+supabase db reset
+
+# Check Supabase status
+supabase status
+
+# View logs
+supabase logs
+```
+
 
 ## Available Scripts
 
