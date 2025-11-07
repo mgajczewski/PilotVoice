@@ -15,3 +15,7 @@ AI Model Communication:
 CI/CD and Hosting:
 - GitHub Actions
 - Vercel
+
+Testing:
+- Unit tests: Vitest, @faker-js/faker
+- E2E tests: Playwright

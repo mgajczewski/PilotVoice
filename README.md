@@ -24,6 +24,7 @@ PilotVoice is a web application for the paragliding community, designed to syste
 - **Backend & Database:** Supabase
 - **AI Integration:** Openrouter.ai
 - **CI/CD & Hosting:** GitHub Actions, Vercel
+- **Testing:** Vitest, Playwright, @faker-js/faker
 
 ## Getting Started Locally
 
