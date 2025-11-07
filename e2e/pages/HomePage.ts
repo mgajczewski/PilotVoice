@@ -6,14 +6,18 @@ import { BasePage } from "./BasePage";
  */
 export class HomePage extends BasePage {
   readonly heading: Locator;
-  readonly loginButton: Locator;
-  readonly registerButton: Locator;
+  readonly headerLoginButton: Locator;
+  readonly headerRegisterButton: Locator;
+  readonly heroLoginButton: Locator;
+  readonly heroRegisterButton: Locator;
 
   constructor(page: Page) {
     super(page);
     this.heading = page.getByRole("heading", { level: 1 });
-    this.loginButton = page.getByRole("link", { name: /login|zaloguj/i });
-    this.registerButton = page.getByRole("link", { name: /register|zarejestruj/i });
+    this.headerLoginButton = page.getByRole("banner").getByRole("link", { name: /sign in/i });
+    this.headerRegisterButton = page.getByRole("banner").getByRole("link", { name: /sign up/i });
+    this.heroLoginButton = page.getByRole("main").getByRole("link", { name: /sign in/i });
+    this.heroRegisterButton = page.getByRole("main").getByRole("link", { name: /sign up/i });
   }
 
   async goto() {
@@ -21,14 +25,20 @@ export class HomePage extends BasePage {
     await this.waitForPageLoad();
   }
 
-  async navigateToLogin() {
-    await this.loginButton.click();
-    await this.waitForPageLoad();
+  async navigateToLoginFromHeader() {
+    await Promise.all([this.page.waitForURL("**/login"), this.headerLoginButton.click()]);
   }
 
-  async navigateToRegister() {
-    await this.registerButton.click();
-    await this.waitForPageLoad();
+  async navigateToLoginFromHero() {
+    await Promise.all([this.page.waitForURL("**/login"), this.heroLoginButton.click()]);
+  }
+
+  async navigateToRegisterFromHeader() {
+    await Promise.all([this.page.waitForURL("**/register"), this.headerRegisterButton.click()]);
+  }
+
+  async navigateToRegisterFromHero() {
+    await Promise.all([this.page.waitForURL("**/register"), this.heroRegisterButton.click()]);
   }
 
   async isLoaded(): Promise<boolean> {

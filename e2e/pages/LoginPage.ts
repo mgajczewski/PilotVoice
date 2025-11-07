@@ -14,10 +14,10 @@ export class LoginPage extends BasePage {
   constructor(page: Page) {
     super(page);
     this.emailInput = page.getByRole("textbox", { name: /email/i });
-    this.passwordInput = page.getByLabel(/password|hasło/i);
-    this.submitButton = page.getByRole("button", { name: /login|zaloguj/i });
-    this.errorMessage = page.getByRole("alert");
-    this.forgotPasswordLink = page.getByRole("link", { name: /forgot password|zapomniał/i });
+    this.passwordInput = page.getByLabel(/password/i);
+    this.submitButton = page.getByRole("button", { name: /sign in/i });
+    this.errorMessage = page.locator("#email-error");
+    this.forgotPasswordLink = page.getByRole("link", { name: /forgot password/i });
   }
 
   async goto() {
