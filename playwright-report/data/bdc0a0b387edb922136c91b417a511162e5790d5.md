@@ -1,0 +1,64 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link "PilotVoice - Home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - text: PilotVoice
+      - generic [ref=e5]:
+        - link "Sign In" [ref=e6] [cursor=pointer]:
+          - /url: /login
+        - link "Sign Up" [ref=e7] [cursor=pointer]:
+          - /url: /register
+  - main [ref=e8]:
+    - generic [ref=e10]:
+      - heading "Your Voice in Paragliding Competitions" [level=1] [ref=e11]
+      - paragraph [ref=e12]: PilotVoice makes it easy for pilots to share feedback on competitions. Help organizers understand what works and what needs improvement. Your insights shape better events for everyone.
+      - generic [ref=e13]:
+        - link "Sign Up Now" [ref=e14] [cursor=pointer]:
+          - /url: /register
+        - link "Sign In" [ref=e15] [cursor=pointer]:
+          - /url: /login
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - heading "How It Works" [level=2] [ref=e19]
+        - paragraph [ref=e20]: Simple, secure, and impactful feedback process
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - img "Quick Surveys" [ref=e23]: ⚡
+          - heading "Quick Surveys" [level=3] [ref=e24]
+          - paragraph [ref=e25]: Complete standardized surveys in just a few minutes after competitions. Your feedback matters and takes minimal time.
+        - generic [ref=e26]:
+          - img "Anonymous Feedback" [ref=e27]: 🔒
+          - heading "Anonymous Feedback" [level=3] [ref=e28]
+          - paragraph [ref=e29]: Your responses are fully anonymous and secure. Share honest opinions without concerns about identification.
+        - generic [ref=e30]:
+          - img "Drive Change" [ref=e31]: 🎯
+          - heading "Drive Change" [level=3] [ref=e32]
+          - paragraph [ref=e33]: Help organizers improve future events. Your feedback directly influences the quality of competitions.
+  - contentinfo [ref=e34]:
+    - generic [ref=e36]:
+      - paragraph [ref=e37]: © 2025 PilotVoice. All rights reserved.
+      - navigation "Footer links" [ref=e38]:
+        - link "Privacy Policy" [ref=e39] [cursor=pointer]:
+          - /url: /privacy
+        - link "Terms of Service" [ref=e40] [cursor=pointer]:
+          - /url: /terms
+        - link "Contact" [ref=e41] [cursor=pointer]:
+          - /url: /contact
+  - generic [ref=e44]:
+    - button "Menu" [ref=e45]:
+      - img [ref=e47]
+      - generic: Menu
+    - button "Inspect" [ref=e51]:
+      - img [ref=e53]
+      - generic: Inspect
+    - button "Audit" [ref=e55]:
+      - img [ref=e57]
+      - generic: Audit
+    - button "Settings" [ref=e60]:
+      - img [ref=e62]
+      - generic: Settings
+```

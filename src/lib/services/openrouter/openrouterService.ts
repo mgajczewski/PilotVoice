@@ -20,7 +20,7 @@ export class OpenRouterService {
 
   constructor(config: OpenRouterConfig = {}) {
     this.apiKey = config.apiKey || import.meta.env.OPENROUTER_API_KEY || "";
-    this.siteUrl = config.siteUrl || import.meta.env.SITE_URL || "http://localhost:4321";
+    this.siteUrl = config.siteUrl || import.meta.env.SITE_URL || "http://localhost:3000";
     this.appName = config.appName || import.meta.env.APP_NAME || "PilotVoice";
 
     if (!this.apiKey) {
