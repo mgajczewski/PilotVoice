@@ -282,6 +282,76 @@ Testy są zaprojektowane do uruchamiania w środowiskach CI:
 - Testy E2E są zoptymalizowane dla CI z odpowiednimi powtórzeniami i zrównolegleniem
 - Raporty pokrycia kodu są generowane do monitorowania jakości testów
 
+## Pliki konfiguracyjne
+
+### Setup testów (`test/setup.ts`)
+
+Plik setup konfiguruje:
+- Czyszczenie React Testing Library
+- Mock `window.matchMedia`
+- Mock `IntersectionObserver`
+- Mock `ResizeObserver`
+- Niestandardowe matchery Jest-DOM
+
+### Fixtures E2E (`e2e/fixtures/index.ts`)
+
+Zapewnia wstępnie skonfigurowane obiekty stron:
+- `homePage`: Instancja HomePage
+- `loginPage`: Instancja LoginPage
+
+## Typowe wzorce
+
+### Mockowanie Supabase
+
+```typescript
+vi.mock('@/db/supabase.client', () => ({
+  createClient: vi.fn(() => ({
+    auth: {
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+      getSession: vi.fn(),
+    },
+    from: vi.fn(() => ({
+      select: vi.fn(),
+      insert: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+    })),
+  })),
+}));
+```
+
+### Generowanie danych testowych z Faker
+
+```typescript
+import { faker } from '@faker-js/faker';
+
+const mockUser = {
+  id: faker.string.uuid(),
+  email: faker.internet.email(),
+  name: faker.person.fullName(),
+  createdAt: faker.date.past(),
+};
+```
+
+### Testowanie komponentów Astro
+
+Komponenty Astro są renderowane po stronie serwera, więc powinny być testowane z testami E2E używając Playwright, a nie testami jednostkowymi.
+
+## Rozwiązywanie problemów
+
+### Problemy z Vitest
+
+1. **Błędy rozwiązywania modułów**: Sprawdź aliasy w `vitest.config.ts`
+2. **Błędy jsdom**: Upewnij się, że `environment: 'jsdom'` jest ustawione
+3. **Mock nie działa**: Sprawdź, czy fabryka mocka jest na najwyższym poziomie
+
+### Problemy z Playwright
+
+1. **Przeglądarka nie znaleziona**: Uruchom `npx playwright install chromium`
+2. **Błędy timeout**: Zwiększ timeout w `playwright.config.ts`
+3. **Problemy z serwerem WWW**: Sprawdź `baseURL` i upewnij się, że serwer dev działa
+
 ## Zasoby
 
 - [Dokumentacja Vitest](https://vitest.dev/)
