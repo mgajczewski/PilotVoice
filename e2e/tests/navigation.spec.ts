@@ -1,19 +1,18 @@
-import { test, expect } from '../fixtures';
+import { test, expect } from "../fixtures";
 
-test.describe('Navigation Flow', () => {
-  test('should navigate from home to login and back', async ({ page, homePage, loginPage }) => {
+test.describe("Navigation Flow", () => {
+  test("should navigate from home to login and back", async ({ page, homePage, loginPage }) => {
     // Start at home
     await homePage.goto();
     expect(await homePage.isLoaded()).toBeTruthy();
-    
+
     // Navigate to login
     await homePage.navigateToLogin();
-    expect(page.url()).toContain('/login');
+    expect(page.url()).toContain("/login");
     expect(await loginPage.isLoaded()).toBeTruthy();
-    
+
     // Go back to home
     await page.goBack();
-    expect(page.url()).not.toContain('/login');
+    expect(page.url()).not.toContain("/login");
   });
 });
-
