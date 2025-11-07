@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator } from "@playwright/test";
 
 /**
  * Base Page Object Model class
@@ -16,7 +16,7 @@ export class BasePage {
   }
 
   async waitForPageLoad() {
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   async getTitle(): Promise<string> {
@@ -27,4 +27,3 @@ export class BasePage {
     await this.page.screenshot({ path: `screenshots/${name}.png` });
   }
 }
-

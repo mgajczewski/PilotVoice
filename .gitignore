@@ -29,3 +29,16 @@ pnpm-debug.log*
 
 # supabase
 supabase/.temp/
+
+# Test Coverage
+coverage/
+.nyc_output/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+screenshots/
+
+# Vitest
+.vitest/
