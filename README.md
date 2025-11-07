@@ -70,18 +70,38 @@ Follow these instructions to get the project up and running on your local machin
     ```bash
     npm run dev
     ```
-    The application will be available at `http://localhost:4321`.
+    The application will be available at `http://localhost:3000`.
 
 ## Available Scripts
 
 The following scripts are available in the `package.json`:
 
+### Development
 - `npm run dev`: Starts the application in development mode.
 - `npm run build`: Builds the application for production.
 - `npm run preview`: Runs a local server to preview the production build.
+
+### Code Quality
 - `npm run lint`: Lints the source code using ESLint.
 - `npm run lint:fix`: Lints the source code and attempts to fix issues automatically.
 - `npm run format`: Formats the code using Prettier.
+
+### Testing
+- `npm test`: Runs all unit tests.
+- `npm run test:watch`: Runs unit tests in watch mode.
+- `npm run test:ui`: Opens Vitest UI for visual test exploration.
+- `npm run test:coverage`: Runs tests with coverage report.
+- `npm run test:e2e`: Runs end-to-end tests with Playwright.
+- `npm run test:e2e:ui`: Opens Playwright UI for visual E2E testing.
+- `npm run test:e2e:headed`: Runs E2E tests in headed mode (visible browser).
+- `npm run test:e2e:debug`: Runs E2E tests in debug mode.
+- `npm run test:e2e:codegen`: Generate test code using Playwright codegen.
+- `npm run test:all`: Runs both unit and E2E tests.
+
+For detailed testing documentation, see:
+- [Testing Setup Guide](docs/testing-setup.md) (English)
+- [Przewodnik konfiguracji testów](docs/testing-setup.pl.md) (Polish)
+- [Quick Testing Reference](docs/TESTING_QUICK_REFERENCE.md)
 
 ## Project Scope (MVP)
 
