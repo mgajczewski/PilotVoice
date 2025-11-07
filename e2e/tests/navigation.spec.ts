@@ -7,7 +7,7 @@ test.describe("Navigation Flow", () => {
     expect(await homePage.isLoaded()).toBeTruthy();
 
     // Navigate to login
-    await homePage.navigateToLogin();
+    await homePage.navigateToLoginFromHeader();
     expect(page.url()).toContain("/login");
     expect(await loginPage.isLoaded()).toBeTruthy();
 

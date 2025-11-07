@@ -17,20 +17,38 @@ test.describe("Home Page", () => {
     expect(title).toContain("PilotVoice");
   });
 
-  test("should navigate to login page", async ({ page }) => {
+  test("should navigate to login page from header", async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 
-    await homePage.navigateToLogin();
+    await homePage.navigateToLoginFromHeader();
 
     expect(page.url()).toContain("/login");
   });
 
-  test("should navigate to register page", async ({ page }) => {
+  test("should navigate to login page from hero section", async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 
-    await homePage.navigateToRegister();
+    await homePage.navigateToLoginFromHero();
+
+    expect(page.url()).toContain("/login");
+  });
+
+  test("should navigate to register page from header", async ({ page }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+
+    await homePage.navigateToRegisterFromHeader();
+
+    expect(page.url()).toContain("/register");
+  });
+
+  test("should navigate to register page from hero section", async ({ page }) => {
+    const homePage = new HomePage(page);
+    await homePage.goto();
+
+    await homePage.navigateToRegisterFromHero();
 
     expect(page.url()).toContain("/register");
   });
