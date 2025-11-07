@@ -1,7 +1,8 @@
 import type { SupabaseClient } from "../../db/supabase.client.ts";
 import type { CreateSurveyResponseCommand, SurveyResponseDto, UpdateSurveyResponseCommand } from "../../types.ts";
-import { AnonymizationService, AnonymizationError } from "./anonymizationService.ts";
+import { AnonymizationError } from "./anonymizationService.ts";
 import { SUPABASE_ERROR_CODES } from "../constants/supabaseErrors.ts";
+import { AnonymizationService } from "./anonymizationServiceProvider.ts";
 
 /**
  * Custom error class for survey-related errors

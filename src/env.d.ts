@@ -24,6 +24,7 @@ interface ImportMetaEnv {
   readonly RECAPTCHA_SITE_KEY: string;
   readonly RECAPTCHA_SECRET_KEY: string;
   readonly SITE?: string;
+  readonly MOCK_AI_SERVICE?: string;
 }
 
 interface ImportMeta {

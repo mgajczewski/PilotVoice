@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { AnonymizationService, AnonymizationError } from "@/lib/services/anonymizationService";
+import { AnonymizationError } from "@/lib/services/anonymizationService";
+import { AnonymizationService } from "@/lib/services/anonymizationServiceProvider";
 
 export const prerender = false;
 
@@ -65,7 +66,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
       );
     }
-  } catch (error) {
+  } catch {
     return new Response(
       JSON.stringify({
         error: "Invalid input",
@@ -114,4 +115,3 @@ export const POST: APIRoute = async ({ request, locals }) => {
     );
   }
 };
-
