@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -46,13 +46,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const isRecaptchaValid = await verifyRecaptcha(recaptchaToken, recaptchaSecretKey);
 
     if (!isRecaptchaValid) {
-      return new Response(
-        JSON.stringify({ message: "reCAPTCHA verification failed. Please try again." }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ message: "reCAPTCHA verification failed. Please try again." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Sign up with Supabase
@@ -70,13 +67,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         message = "Password does not meet requirements";
       }
 
-      return new Response(
-        JSON.stringify({ message }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ message }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     return new Response(
@@ -89,16 +83,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   } catch (error) {
-    return new Response(
-      JSON.stringify({ message: "An unexpected error occurred" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
-

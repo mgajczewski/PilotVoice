@@ -21,7 +21,7 @@ interface ImportMetaEnv {
   readonly SUPABASE_KEY: string;
   readonly OPENROUTER_API_KEY: string;
   readonly OPENROUTER_MODEL?: string;
-  readonly RECAPTCHA_SITE_KEY: string;
+  readonly PUBLIC_RECAPTCHA_SITE_KEY: string;
   readonly RECAPTCHA_SECRET_KEY: string;
   readonly SITE?: string;
   readonly MOCK_AI_SERVICE?: string;

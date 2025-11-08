@@ -99,7 +99,7 @@ OPENROUTER_API_KEY=your_openrouter_api_key
 OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
 
 # reCAPTCHA Configuration
-RECAPTCHA_SITE_KEY=your_recaptcha_site_key
+PUBLIC_RECAPTCHA_SITE_KEY=your_recaptcha_site_key
 RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
 
 # Mock AI Service (set to true for testing without API costs)
