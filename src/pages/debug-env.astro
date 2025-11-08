@@ -1,0 +1,59 @@
+---
+const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY;
+const allPublicEnvs = Object.keys(import.meta.env).filter((key) => key.startsWith("PUBLIC_"));
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Environment Variables</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+      }
+      h1,
+      h2 {
+        color: #333;
+      }
+      code {
+        background-color: #eee;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 1rem;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      .variable {
+        margin-bottom: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Environment Variable Debugging</h1>
+
+    <div class="variable">
+      <h2>Value of <code>PUBLIC_RECAPTCHA_SITE_KEY</code></h2>
+      <pre>
+{JSON.stringify(recaptchaSiteKey, null, 2) || "Not Set / Undefined"}
+    </pre>
+      <p>
+        If you see <code>[0]</code> or <code>"Not Set / Undefined"</code>, the variable is not correctly configured in
+        Vercel.
+      </p>
+    </div>
+
+    <div class="variable">
+      <h2>All Available Public Environment Variables</h2>
+      <p>Check here for typos in variable names.</p>
+      <pre>
+{JSON.stringify(allPublicEnvs, null, 2)}
+    </pre>
+    </div>
+  </body>
+</html>
