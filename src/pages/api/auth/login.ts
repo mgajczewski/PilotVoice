@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { LoginSchema } from "../../../lib/schemas/authSchemas";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -51,7 +52,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
+  } catch (err) {
+    log.error("Unexpected error in login endpoint:", err);
     return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

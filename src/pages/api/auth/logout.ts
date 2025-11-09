@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -14,7 +15,8 @@ export const POST: APIRoute = async ({ locals }) => {
     }
 
     return new Response(null, { status: 200 });
-  } catch (error) {
+  } catch (err) {
+    log.error("Unexpected error in logout endpoint:", err);
     return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

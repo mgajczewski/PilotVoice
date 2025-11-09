@@ -16,10 +16,10 @@ export interface JSONSchema {
   properties?: Record<string, JSONSchema>;
   items?: JSONSchema;
   required?: string[];
-  enum?: any[];
+  enum?: unknown[];
   additionalProperties?: boolean | JSONSchema;
   description?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

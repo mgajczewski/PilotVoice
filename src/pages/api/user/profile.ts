@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { UpdateProfileSchema } from "../../../lib/schemas/authSchemas";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -31,7 +32,8 @@ export const GET: APIRoute = async ({ locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch (err) {
+    log.error("Unexpected error in GET /api/user/profile endpoint:", err);
     return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
@@ -89,7 +91,8 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch (err) {
+    log.error("Unexpected error in PATCH /api/user/profile endpoint:", err);
     return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

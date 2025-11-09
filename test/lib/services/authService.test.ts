@@ -21,6 +21,7 @@ describe("Authentication Service", () => {
     mockSupabase.auth.signInWithPassword.mockResolvedValue({
       data: { user: mockSession.user, session: mockSession },
       error: null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     const result = await mockSupabase.auth.signInWithPassword({
@@ -43,6 +44,7 @@ describe("Authentication Service", () => {
     mockSupabase.auth.signInWithPassword.mockResolvedValue({
       data: { user: null, session: null },
       error: mockError,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     const result = await mockSupabase.auth.signInWithPassword({

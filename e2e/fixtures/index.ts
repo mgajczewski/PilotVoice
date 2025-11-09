@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+// Playwright fixtures use "use" parameter which triggers React hooks rule
+// but this is not React code, it's Playwright's fixture mechanism
 import { test as base } from "@playwright/test";
 import { HomePage } from "../pages/HomePage";
 import { LoginPage } from "../pages/LoginPage";
@@ -40,7 +43,7 @@ export const test = base.extend<TestFixtures>({
     await use(surveyFillPage);
   },
 
-  supabase: async ({}, use) => {
+  supabase: async (_page, use) => {
     const client = createSupabaseTestClient();
     await use(client);
   },

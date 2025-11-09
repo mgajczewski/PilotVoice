@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { ChangePasswordSchema } from "../../../lib/schemas/authSchemas";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -50,7 +51,8 @@ export const PUT: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch (err) {
+    log.error("Unexpected error in change-password endpoint:", err);
     return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
