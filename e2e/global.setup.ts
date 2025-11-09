@@ -1,4 +1,3 @@
-import type { FullConfig } from "@playwright/test";
 import type { TablesInsert } from "../src/db/database.types";
 import { clearTestData, createSupabaseTestClient } from "./utils/supabase";
 
@@ -49,7 +48,7 @@ const buildSurveys = (competitionIds: number[], suffix: number): TablesInsert<"s
   }));
 };
 
-export default async function globalSetup(_config: FullConfig): Promise<void> {
+export default async function globalSetup(): Promise<void> {
   const supabase = createSupabaseTestClient();
   const suffix = Date.now();
 
@@ -81,4 +80,5 @@ export default async function globalSetup(_config: FullConfig): Promise<void> {
   }
 
   process.env.E2E_COMPETITION_IDS = JSON.stringify(competitionIds);
+  process.env.E2E_SURVEY_SLUGS = JSON.stringify(surveys.map((s) => s.slug));
 }

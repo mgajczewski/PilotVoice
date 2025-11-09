@@ -106,7 +106,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         <CardDescription>Enter your credentials to access your account</CardDescription>
       </CardHeader>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <CardContent>
           <div className="space-y-4">
             {error && (

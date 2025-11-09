@@ -9,10 +9,14 @@ interface SurveyInfoCardProps {
 
 export function SurveyInfoCard({ title, subtitle, children }: SurveyInfoCardProps) {
   return (
-    <Card>
+    <Card data-testid="survey-info-card">
       <CardHeader>
-        <CardTitle className="text-2xl md:text-3xl">{title}</CardTitle>
-        <CardDescription className="text-base md:text-lg">{subtitle}</CardDescription>
+        <CardTitle className="text-2xl md:text-3xl" data-testid="survey-competition-name">
+          {title}
+        </CardTitle>
+        <CardDescription className="text-base md:text-lg" data-testid="survey-competition-dates">
+          {subtitle}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">{children}</div>

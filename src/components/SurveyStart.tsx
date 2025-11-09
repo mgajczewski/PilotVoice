@@ -14,6 +14,7 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
   const [surveyResponse, setSurveyResponse] = useState<SurveyResponseDto | null | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorType, setErrorType] = useState<"fatal" | "recoverable" | null>(null);
 
   // Fetch user session and survey response
   useEffect(() => {
@@ -34,13 +35,16 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
         } else if (response.status === 404) {
           // Survey not found
           setError("Survey not found.");
+          setErrorType("fatal");
         } else {
           // Other error
           setError("Failed to load data. Please try refreshing the page.");
+          setErrorType("recoverable");
         }
       } catch (err) {
         console.error("Error fetching user and response:", err);
         setError("An error occurred while loading data.");
+        setErrorType("recoverable");
       }
     };
 
@@ -64,6 +68,7 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
     // Create new survey response
     setIsLoading(true);
     setError(null);
+    setErrorType(null);
 
     try {
       const response = await fetch(`/api/surveys/${surveyId}/responses`, {
@@ -81,10 +86,12 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
         window.location.href = getSurveyFillUrl(surveySlug);
       } else if (response.status === 401) {
         setError("Session expired. Please log in again.");
+        setErrorType("recoverable");
         setIsAuthenticated(false);
       } else if (response.status === 409) {
         // User already has a response (race condition)
         setError("You have already started this survey.");
+        setErrorType("recoverable");
         // Fetch the existing response
         const existingResponse = await fetch(`/api/surveys/${surveyId}/responses/me`);
         if (existingResponse.ok) {
@@ -93,10 +100,12 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
         }
       } else {
         setError("An error occurred while starting the survey. Please try again.");
+        setErrorType("recoverable");
       }
     } catch (err) {
       console.error("Error starting survey:", err);
       setError("An error occurred while starting the survey. Please try again.");
+      setErrorType("recoverable");
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +114,7 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
   // Loading state
   if (isAuthenticated === undefined || (isAuthenticated && surveyResponse === undefined)) {
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center" data-testid="survey-start-loading">
         <Button disabled className="w-full sm:w-auto">
           Loading...
         </Button>
@@ -116,16 +125,10 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
   // Error state
   if (error) {
     return (
-      <div className="space-y-4">
-        <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-4">
-          <p className="text-sm text-destructive">{error}</p>
-        </div>
-        {isAuthenticated && (
-          <div className="flex justify-center">
-            <Button onClick={handleStartSurvey} disabled={isLoading} className="w-full sm:w-auto">
-              {isLoading ? "Loading..." : surveyResponse ? "Continue Survey" : "Start Survey"}
-            </Button>
-          </div>
+      <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-4" data-testid="survey-start-error">
+        <p className="text-sm text-destructive font-medium">{error}</p>
+        {errorType === "recoverable" && (
+          <p className="text-sm text-destructive/80 mt-2">Please refresh the page to try again.</p>
         )}
       </div>
     );
@@ -140,8 +143,14 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
   }
 
   return (
-    <div className="flex justify-center">
-      <Button onClick={handleStartSurvey} disabled={isLoading} size="lg" className="w-full sm:w-auto">
+    <div className="flex justify-center" data-testid="survey-start-action">
+      <Button
+        onClick={handleStartSurvey}
+        disabled={isLoading}
+        size="lg"
+        className="w-full sm:w-auto"
+        data-testid="survey-start-button"
+      >
         {isLoading ? "Loading..." : buttonText}
       </Button>
     </div>

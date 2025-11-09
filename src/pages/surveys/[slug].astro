@@ -49,15 +49,15 @@ const competitionDates = `${formatDate(competition.starts_at)} - ${formatDate(co
     <div class="max-w-2xl mx-auto">
       <SurveyInfoCard client:load title={competition.name} subtitle={competitionDates}>
         <!-- Competition Info -->
-        <div class="text-muted-foreground">
+        <div class="text-muted-foreground" data-testid="survey-competition-info">
           <p class="flex items-center gap-2">
             <span class="font-medium">Location:</span>
-            <span>{competition.city}, {competition.country_code}</span>
+            <span data-testid="survey-competition-location">{competition.city}, {competition.country_code}</span>
           </p>
         </div>
 
         <!-- Anonymity Information -->
-        <div class="rounded-lg bg-muted/50 p-4 border border-border">
+        <div class="rounded-lg bg-muted/50 p-4 border border-border" data-testid="survey-anonymity-info">
           <h3 class="font-semibold mb-2 text-foreground">📋 About the Survey</h3>
           <p class="text-sm text-muted-foreground leading-relaxed">
             Your responses are <strong class="text-foreground">completely anonymous</strong>. Competition organizers
