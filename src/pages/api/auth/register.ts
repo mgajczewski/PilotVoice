@@ -86,7 +86,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
+  } catch (err) {
+    log.error("Unexpected error in register endpoint:", err);
     return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

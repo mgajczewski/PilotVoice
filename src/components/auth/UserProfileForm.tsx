@@ -75,7 +75,7 @@ export function UserProfileForm({ initialCivlId, initialRegistrationReason }: Us
       <CardHeader>
         <CardTitle className="text-2xl">Profile Information</CardTitle>
         <CardDescription>
-          Update your CIVL ID or provide a reason for registration if you don't have one
+          Update your CIVL ID or provide a reason for registration if you don&apos;t have one
         </CardDescription>
       </CardHeader>
 
@@ -120,14 +120,14 @@ export function UserProfileForm({ initialCivlId, initialRegistrationReason }: Us
                 rows={4}
               />
               <p className="text-xs text-muted-foreground">
-                If you don't have a CIVL ID, please explain your reason for registration
+                If you don&apos;t have a CIVL ID, please explain your reason for registration
               </p>
             </div>
 
             <div className="rounded-lg bg-muted/50 border p-4">
               <p className="text-sm text-muted-foreground">
                 <strong>Note:</strong> Providing your CIVL ID helps us verify your participation in competitions. If you
-                don't have a CIVL ID, please provide a brief explanation of your involvement in paragliding.
+                don&apos;t have a CIVL ID, please provide a brief explanation of your involvement in paragliding.
               </p>
             </div>
           </div>

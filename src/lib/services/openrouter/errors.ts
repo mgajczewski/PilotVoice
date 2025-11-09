@@ -15,7 +15,7 @@ export class ApiError extends OpenRouterError {
   constructor(
     message: string,
     public status: number,
-    public details?: any
+    public details?: Record<string, unknown>
   ) {
     super(message);
     this.name = "ApiError";
@@ -28,7 +28,7 @@ export class ApiError extends OpenRouterError {
 export class ValidationError extends OpenRouterError {
   constructor(
     message: string,
-    public validationErrors?: any
+    public validationErrors?: Record<string, unknown>
   ) {
     super(message);
     this.name = "ValidationError";

@@ -1,10 +1,4 @@
-import type {
-  OpenRouterConfig,
-  CompletionParams,
-  OpenRouterRequestBody,
-  OpenRouterResponse,
-  JSONSchema,
-} from "./types";
+import type { OpenRouterConfig, CompletionParams, OpenRouterRequestBody, OpenRouterResponse } from "./types";
 import { OpenRouterError, ApiError, ValidationError } from "./errors";
 import log from "@/lib/logger";
 
@@ -43,7 +37,7 @@ export class OpenRouterService {
     const response = await this.makeApiCall(requestBody);
 
     // 3. Parse and validate the response
-    const content = this.parseAndValidateResponse<T>(response, params.responseSchema);
+    const content = this.parseAndValidateResponse<T>(response);
 
     return content;
   }
@@ -135,7 +129,7 @@ export class OpenRouterService {
    * Parse and validate the API response
    * @private
    */
-  private parseAndValidateResponse<T>(response: OpenRouterResponse, schema: { name: string; schema: JSONSchema }): T {
+  private parseAndValidateResponse<T>(response: OpenRouterResponse): T {
     // Extract content from response
     if (!response.choices || response.choices.length === 0) {
       throw new ValidationError("API response contains no choices");
@@ -147,7 +141,7 @@ export class OpenRouterService {
     }
 
     // Parse JSON
-    let parsed: any;
+    let parsed: unknown;
     try {
       parsed = JSON.parse(content);
     } catch (error) {
@@ -172,7 +166,7 @@ export class OpenRouterService {
    * Get user-friendly error message based on status code
    * @private
    */
-  private getErrorMessage(status: number, details?: any): string {
+  private getErrorMessage(status: number, details?: Record<string, unknown>): string {
     switch (status) {
       case 401:
         return "Invalid API Key. Please check your OpenRouter API key configuration.";
@@ -182,8 +176,10 @@ export class OpenRouterService {
       case 502:
       case 503:
         return "OpenRouter service is temporarily unavailable. Please try again later.";
-      default:
-        return `API request failed with status ${status}${details?.error?.message ? `: ${details.error.message}` : ""}`;
+      default: {
+        const errorDetails = details as { error?: { message?: string } } | undefined;
+        return `API request failed with status ${status}${errorDetails?.error?.message ? `: ${errorDetails.error.message}` : ""}`;
+      }
     }
   }
 }

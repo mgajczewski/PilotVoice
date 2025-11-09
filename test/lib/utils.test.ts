@@ -17,7 +17,8 @@ describe("Utils", () => {
     });
 
     it("removes falsy values", () => {
-      const result = cn("base-class", false && "hidden-class", undefined, null);
+      const shouldShow = false;
+      const result = cn("base-class", shouldShow && "hidden-class", undefined, null);
       expect(result).toContain("base-class");
       expect(result).not.toContain("hidden-class");
     });

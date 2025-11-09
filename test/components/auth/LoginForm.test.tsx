@@ -46,6 +46,7 @@ describe("LoginForm", () => {
     vi.mocked(supabase.auth.signInWithPassword).mockResolvedValue({
       data: { user: { id: "123" }, session: {} },
       error: null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
     render(<LoginForm />);

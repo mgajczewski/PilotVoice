@@ -59,7 +59,8 @@ export async function POST(context: APIContext): Promise<Response> {
   try {
     const text = await context.request.text();
     requestBody = text ? JSON.parse(text) : {};
-  } catch (error) {
+  } catch (err) {
+    log.error("Error parsing JSON in survey response:", err);
     return new Response(JSON.stringify({ error: "Invalid JSON in request body" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
@@ -97,24 +98,24 @@ export async function POST(context: APIContext): Promise<Response> {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch (err) {
     // Handle specific error types
-    if (error instanceof SurveyNotFoundError) {
-      return new Response(JSON.stringify({ error: error.message }), {
+    if (err instanceof SurveyNotFoundError) {
+      return new Response(JSON.stringify({ error: err.message }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    if (error instanceof DuplicateSurveyResponseError) {
-      return new Response(JSON.stringify({ error: error.message }), {
+    if (err instanceof DuplicateSurveyResponseError) {
+      return new Response(JSON.stringify({ error: err.message }), {
         status: 409,
         headers: { "Content-Type": "application/json" },
       });
     }
 
     // Log unexpected errors
-    log.error("Error creating survey response:", error);
+    log.error("Error creating survey response:", err);
 
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,

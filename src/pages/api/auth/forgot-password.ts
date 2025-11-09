@@ -47,7 +47,8 @@ export const POST: APIRoute = async ({ request, locals, url }) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
+  } catch (err) {
+    log.error("Unexpected error in forgot-password endpoint:", err);
     return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
