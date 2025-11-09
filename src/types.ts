@@ -189,3 +189,35 @@ export interface SurveyResultsDto {
   /** The completion rate of the open feedback field, as a percentage. */
   openFeedbackCompletionRate: number;
 }
+
+/**
+ * =================================================================================
+ *
+ * ANONYMIZATION SERVICE
+ *
+ * =================================================================================
+ */
+
+/**
+ * Response from GDPR check and anonymization
+ */
+export interface GdprCheckResult {
+  /** Whether the text contains personal data that should be anonymized */
+  containsPersonalData: boolean;
+  /** Confidence level (0-1) in the detection */
+  confidence: number;
+  /** The original user-submitted text */
+  originalText: string;
+  /** The anonymized version (null if no personal data detected) */
+  anonymizedText: string | null;
+  /** Types of personal data detected (e.g., ['full_name', 'email']) */
+  detectedDataTypes?: string[];
+}
+
+/**
+ * Interface for the Anonymization Service.
+ * Ensures that both real and mock implementations have the same contract.
+ */
+export interface IAnonymizationService {
+  checkAndAnonymize: (text: string) => Promise<GdprCheckResult>;
+}

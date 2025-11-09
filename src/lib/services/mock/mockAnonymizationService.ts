@@ -4,7 +4,7 @@
  * @server-only This service must only be used on the server-side
  */
 
-import type { GdprCheckResult } from "@/lib/services/anonymizationService";
+import type { GdprCheckResult, IAnonymizationService } from "@/types";
 
 /**
  * Pre-defined mock responses for testing different scenarios.
@@ -91,7 +91,6 @@ export const checkAndAnonymize = async (text: string): Promise<GdprCheckResult> 
   };
 };
 
-export const MockAnonymizationService = {
+export const MockAnonymizationService: IAnonymizationService = {
   checkAndAnonymize,
 };
-

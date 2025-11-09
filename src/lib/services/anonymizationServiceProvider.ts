@@ -1,7 +1,9 @@
+import type { IAnonymizationService } from "@/types";
+
 // Conditionally import and export the correct service implementation
 const useMock = import.meta.env.MOCK_AI_SERVICE === "true";
 
-export const AnonymizationService = useMock
+export const AnonymizationService: IAnonymizationService = useMock
   ? (await import("@/lib/services/mock/mockAnonymizationService")).MockAnonymizationService
   : (await import("@/lib/services/anonymizationService")).AnonymizationService;
 

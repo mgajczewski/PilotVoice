@@ -6,6 +6,7 @@
 
 import { OpenRouterService } from "./openrouter/openrouterService";
 import type { JSONSchema } from "./openrouter/types";
+import type { GdprCheckResult, IAnonymizationService } from "@/types";
 
 /**
  * Custom error class for anonymization failures
@@ -15,22 +16,6 @@ export class AnonymizationError extends Error {
     super(`Failed to anonymize feedback: ${message}`);
     this.name = "AnonymizationError";
   }
-}
-
-/**
- * Response from GDPR check and anonymization
- */
-export interface GdprCheckResult {
-  /** Whether the text contains personal data that should be anonymized */
-  containsPersonalData: boolean;
-  /** Confidence level (0-1) in the detection */
-  confidence: number;
-  /** The original user-submitted text */
-  originalText: string;
-  /** The anonymized version (null if no personal data detected) */
-  anonymizedText: string | null;
-  /** Types of personal data detected (e.g., ['full_name', 'email']) */
-  detectedDataTypes?: string[];
 }
 
 /**
@@ -202,6 +187,6 @@ Rules:
   }
 };
 
-export const AnonymizationService = {
+export const AnonymizationService: IAnonymizationService = {
   checkAndAnonymize,
 };
