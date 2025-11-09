@@ -42,10 +42,14 @@ This document describes the testing environment and best practices for PilotVoic
 │   │   └── index.ts             # Exports
 │   ├── fixtures/                # Test fixtures
 │   │   └── index.ts            # Custom test extensions
-│   └── tests/                   # Test specs
-│       ├── home.spec.ts
-│       ├── login.spec.ts
-│       └── navigation.spec.ts
+│   ├── tests/                   # Test specs
+│   │   ├── home.spec.ts
+│   │   ├── login.spec.ts
+│   │   └── navigation.spec.ts
+│   ├── utils/                    # Utility helpers
+│   │   └── supabase.ts          # Supabase client for tests
+│   ├── global.setup.ts            # Global setup before tests
+│   └── global.teardown.ts         # Global teardown after tests
 │
 ├── vitest.config.ts              # Vitest configuration
 └── playwright.config.ts          # Playwright configuration
@@ -283,6 +287,31 @@ Tests are designed to run in CI environments:
 - Coverage reports are generated for monitoring test quality
 
 ## Setup Files
+
+### Playwright Configuration (`playwright.config.ts`)
+
+The main configuration file for Playwright. It defines:
+- Global `setup` and `teardown` scripts.
+- Development server configuration (`webServer`).
+- Settings for the browsers on which the tests are run.
+- The base URL of the application (`baseURL`).
+
+### Global E2E Setup (`e2e/global.setup.ts`)
+
+A script that runs once before all E2E tests. Its purpose is to prepare the test environment:
+- Clearing test data from previous runs.
+- Seeding the database with new test data, e.g., creating competitions and surveys.
+- Passing data (e.g., IDs of created objects) to tests via environment variables.
+
+### Global E2E Teardown (`e2e/global.teardown.ts`)
+
+A script that runs once after all E2E tests have finished. It is responsible for cleaning up the test environment, primarily by deleting the data created by the `global.setup.ts` script.
+
+### Supabase Utilities (`e2e/utils/supabase.ts`)
+
+A helper module that contains:
+- A function to create a Supabase client connected to the test database.
+- Functions for managing test data (e.g., `clearTestData` for deleting data).
 
 ### Test Setup (`test/setup.ts`)
 

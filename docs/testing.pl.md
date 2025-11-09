@@ -42,10 +42,14 @@ Ten dokument opisuje środowisko testowe oraz najlepsze praktyki dla projektu Pi
 │   │   └── index.ts             # Eksporty
 │   ├── fixtures/                # Fixtures testowe
 │   │   └── index.ts            # Niestandardowe rozszerzenia testów
-│   └── tests/                   # Specyfikacje testów
-│       ├── home.spec.ts
-│       ├── login.spec.ts
-│       └── navigation.spec.ts
+│   ├── tests/                   # Specyfikacje testów
+│   │   ├── home.spec.ts
+│   │   ├── login.spec.ts
+│   │   └── navigation.spec.ts
+│   ├── utils/                    # Narzędzia pomocnicze
+│   │   └── supabase.ts          # Klient Supabase dla testów
+│   ├── global.setup.ts            # Globalna konfiguracja przed testami
+│   └── global.teardown.ts         # Globalne czyszczenie po testach
 │
 ├── vitest.config.ts              # Konfiguracja Vitest
 └── playwright.config.ts          # Konfiguracja Playwright
@@ -284,6 +288,31 @@ Testy są zaprojektowane do uruchamiania w środowiskach CI:
 
 ## Pliki konfiguracyjne
 
+### Konfiguracja Playwright (`playwright.config.ts`)
+
+Główny plik konfiguracyjny dla Playwright. Definiuje:
+- Globalne skrypty `setup` i `teardown`.
+- Konfigurację serwera deweloperskiego (`webServer`).
+- Ustawienia przeglądarek, na których uruchamiane są testy.
+- Adres bazowy aplikacji (`baseURL`).
+
+### Globalny Setup E2E (`e2e/global.setup.ts`)
+
+Skrypt uruchamiany raz, przed wykonaniem wszystkich testów E2E. Jego zadaniem jest przygotowanie środowiska testowego:
+- Czyszczenie danych testowych z poprzednich uruchomień.
+- Wypełnianie bazy danych nowymi danymi testowymi (tzw. "seedowanie"), np. tworzenie konkursów i ankiet.
+- Przekazywanie danych (np. ID utworzonych obiektów) do testów za pomocą zmiennych środowiskowych.
+
+### Globalny Teardown E2E (`e2e/global.teardown.ts`)
+
+Skrypt uruchamiany raz, po zakończeniu wszystkich testów E2E. Odpowiada za posprzątanie środowiska testowego, głównie poprzez usunięcie danych utworzonych przez skrypt `global.setup.ts`.
+
+### Narzędzia Supabase (`e2e/utils/supabase.ts`)
+
+Moduł pomocniczy zawierający:
+- Funkcję do tworzenia klienta Supabase połączonego z testową bazą danych.
+- Funkcje do zarządzania danymi testowymi (np. `clearTestData` do usuwania danych).
+
 ### Setup testów (`test/setup.ts`)
 
 Plik setup konfiguruje:
@@ -292,12 +321,6 @@ Plik setup konfiguruje:
 - Mock `IntersectionObserver`
 - Mock `ResizeObserver`
 - Niestandardowe matchery Jest-DOM
-
-### Fixtures E2E (`e2e/fixtures/index.ts`)
-
-Zapewnia wstępnie skonfigurowane obiekty stron:
-- `homePage`: Instancja HomePage
-- `loginPage`: Instancja LoginPage
 
 ## Typowe wzorce
 
