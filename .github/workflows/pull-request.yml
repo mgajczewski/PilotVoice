@@ -1,0 +1,127 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+  unit-tests:
+    needs: lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload unit test coverage
+        if: success()
+        uses: actions/upload-artifact@v5
+        with:
+          name: unit-test-coverage
+          path: coverage
+          if-no-files-found: error
+
+  e2e-tests:
+    needs: lint
+    runs-on: ubuntu-latest
+    environment: E2E
+    env:
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
+      MOCK_AI_SERVICE: ${{ vars.MOCK_AI_SERVICE }}
+      E2E_USER_EMAIL: ${{ vars.E2E_USER_EMAIL }}
+      E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+      E2E_USER2_EMAIL: ${{ vars.E2E_USER2_EMAIL }}
+      E2E_USER2_PASSWORD: ${{ secrets.E2E_USER2_PASSWORD }}
+      E2E_ADMIN_EMAIL: ${{ vars.E2E_ADMIN_EMAIL }}
+      E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run e2e tests with coverage
+        run: npx playwright test --coverage --reporter=line
+
+      - name: Upload e2e coverage
+        if: success()
+        uses: actions/upload-artifact@v5
+        with:
+          name: e2e-coverage
+          path: playwright-report/coverage
+          if-no-files-found: error
+
+  status-comment:
+    needs:
+      - lint
+      - unit-tests
+      - e2e-tests
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Comment pull request status
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = [
+              "✅ All pull request checks completed successfully.",
+              "",
+              "- lint",
+              "- unit-tests (coverage uploaded)",
+              "- e2e-tests (coverage uploaded)"
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
