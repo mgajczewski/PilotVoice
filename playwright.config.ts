@@ -4,6 +4,11 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: path.resolve(process.cwd(), ".env.test") });
 
+// Set NODE_ENV for the dev server if not already set
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = "development";
+}
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
