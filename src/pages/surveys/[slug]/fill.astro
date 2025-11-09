@@ -4,6 +4,7 @@ import { SurveyService, SurveyNotFoundError } from "../../../lib/services/survey
 import { SurveyResponseService } from "../../../lib/services/surveyResponseService";
 import { SurveyFillForm } from "../../../components/survey/SurveyFillForm";
 import type { SurveyResponseDto } from "../../../types";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -32,7 +33,7 @@ try {
   if (error instanceof SurveyNotFoundError) {
     return Astro.redirect("/404");
   }
-  console.error("Error loading survey:", error);
+  log.error("Error loading survey:", error);
   return Astro.redirect("/500");
 }
 
@@ -43,7 +44,7 @@ let userResponse: SurveyResponseDto | null = null;
 try {
   userResponse = await SurveyResponseService.findUserResponse(survey.id, user.id, supabase);
 } catch (error) {
-  console.error("Error fetching user response:", error);
+  log.error("Error fetching user response:", error);
   // Continue without response - will be created on client-side
 }
 ---

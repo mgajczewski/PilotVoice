@@ -7,6 +7,7 @@
 import { OpenRouterService } from "./openrouter/openrouterService";
 import type { JSONSchema } from "./openrouter/types";
 import type { GdprCheckResult, IAnonymizationService } from "@/types";
+import log from "@/lib/logger";
 
 /**
  * Custom error class for anonymization failures
@@ -116,7 +117,7 @@ Rules:
       maxTokens: 200,
     });
 
-    console.log("Detection result:", detectionResult);
+    log.debug("Detection result:", detectionResult);
 
     // Step 2: If personal data detected, anonymize the text
     let anonymizedText: string | null = null;
@@ -159,7 +160,7 @@ Rules:
         maxTokens: 1000,
       });
 
-      console.log("Anonymization result:", anonymizationResult);
+      log.debug("Anonymization result:", anonymizationResult);
 
       anonymizedText = anonymizationResult.anonymizedText.trim();
 

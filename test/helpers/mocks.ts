@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 /**
  * Creates a mock Supabase client for testing
@@ -35,4 +35,3 @@ export const createMockApiResponse = <T>(data: T, status = 200) => ({
   ok: status >= 200 && status < 300,
   json: async () => data,
 });
-

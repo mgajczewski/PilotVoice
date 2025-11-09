@@ -3,6 +3,7 @@ import type { CreateSurveyResponseCommand, SurveyResponseDto, UpdateSurveyRespon
 import { AnonymizationError } from "./anonymizationService.ts";
 import { SUPABASE_ERROR_CODES } from "../constants/supabaseErrors.ts";
 import { AnonymizationService } from "./anonymizationServiceProvider.ts";
+import log from "@/lib/logger";
 
 /**
  * Custom error class for survey-related errors
@@ -216,10 +217,10 @@ export const updateSurveyResponse = async (
       } catch (error) {
         // Re-throw anonymization errors
         if (error instanceof AnonymizationError) {
-          console.error(`Anonymization error for survey response ${responseId}`, error);
+          log.error(`Anonymization error for survey response ${responseId}`, error);
           throw error;
         }
-        console.error(`Unknown error during anonymization for survey response ${responseId}`, error);
+        log.error(`Unknown error during anonymization for survey response ${responseId}`, error);
         throw new AnonymizationError(error instanceof Error ? error.message : "Unknown error");
       }
     }

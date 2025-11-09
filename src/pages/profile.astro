@@ -21,10 +21,7 @@ const userCivlId = profile?.civl_id ?? null;
 const userRegistrationReason = profile?.registration_reason ?? null;
 ---
 
-<Layout
-  title="My Profile - PilotVoice"
-  description="Manage your PilotVoice account settings and profile information."
->
+<Layout title="My Profile - PilotVoice" description="Manage your PilotVoice account settings and profile information.">
   <section class="min-h-[80vh] px-4 py-16">
     <div class="container mx-auto max-w-3xl">
       <!-- Page Header -->
@@ -36,11 +33,7 @@ const userRegistrationReason = profile?.registration_reason ?? null;
       <!-- Profile Forms -->
       <div class="space-y-6">
         <!-- User Profile Form -->
-        <UserProfileForm
-          client:load
-          initialCivlId={userCivlId}
-          initialRegistrationReason={userRegistrationReason}
-        />
+        <UserProfileForm client:load initialCivlId={userCivlId} initialRegistrationReason={userRegistrationReason} />
 
         <!-- Change Password Form -->
         <ChangePasswordForm client:load />
@@ -48,4 +41,3 @@ const userRegistrationReason = profile?.registration_reason ?? null;
     </div>
   </section>
 </Layout>
-

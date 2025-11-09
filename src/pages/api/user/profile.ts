@@ -7,13 +7,10 @@ export const GET: APIRoute = async ({ locals }) => {
   try {
     // Check if user is authenticated
     if (!locals.user) {
-      return new Response(
-        JSON.stringify({ message: "Unauthorized" }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Get user profile
@@ -24,13 +21,10 @@ export const GET: APIRoute = async ({ locals }) => {
       .single();
 
     if (error) {
-      return new Response(
-        JSON.stringify({ message: "Failed to fetch profile" }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ message: "Failed to fetch profile" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     return new Response(JSON.stringify(profile), {
@@ -38,13 +32,10 @@ export const GET: APIRoute = async ({ locals }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(
-      JSON.stringify({ message: "An unexpected error occurred" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
 
@@ -52,13 +43,10 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
   try {
     // Check if user is authenticated
     if (!locals.user) {
-      return new Response(
-        JSON.stringify({ message: "Unauthorized" }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     // Parse and validate request body
@@ -73,7 +61,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -91,13 +79,10 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       .single();
 
     if (error) {
-      return new Response(
-        JSON.stringify({ message: "Failed to update profile" }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({ message: "Failed to update profile" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     return new Response(JSON.stringify(profile), {
@@ -105,13 +90,9 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(
-      JSON.stringify({ message: "An unexpected error occurred" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return new Response(JSON.stringify({ message: "An unexpected error occurred" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
-

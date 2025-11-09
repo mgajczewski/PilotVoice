@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateTestUser } from '../../helpers/testData';
-import { createMockSupabaseClient } from '../../helpers/mocks';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { generateTestUser } from "../../helpers/testData";
+import { createMockSupabaseClient } from "../../helpers/mocks";
 
 // Example service test
-describe('Authentication Service', () => {
+describe("Authentication Service", () => {
   let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
 
   beforeEach(() => {
@@ -11,11 +11,11 @@ describe('Authentication Service', () => {
     vi.clearAllMocks();
   });
 
-  it('should sign in user with valid credentials', async () => {
+  it("should sign in user with valid credentials", async () => {
     const testUser = generateTestUser();
     const mockSession = {
-      user: { id: '123', email: testUser.email },
-      access_token: 'mock-token',
+      user: { id: "123", email: testUser.email },
+      access_token: "mock-token",
     };
 
     mockSupabase.auth.signInWithPassword.mockResolvedValue({
@@ -36,9 +36,9 @@ describe('Authentication Service', () => {
     expect(result.error).toBeNull();
   });
 
-  it('should return error for invalid credentials', async () => {
+  it("should return error for invalid credentials", async () => {
     const testUser = generateTestUser();
-    const mockError = { message: 'Invalid credentials' };
+    const mockError = { message: "Invalid credentials" };
 
     mockSupabase.auth.signInWithPassword.mockResolvedValue({
       data: { user: null, session: null },
@@ -47,11 +47,10 @@ describe('Authentication Service', () => {
 
     const result = await mockSupabase.auth.signInWithPassword({
       email: testUser.email,
-      password: 'wrong-password',
+      password: "wrong-password",
     });
 
     expect(result.error).toEqual(mockError);
     expect(result.data.user).toBeNull();
   });
 });
-

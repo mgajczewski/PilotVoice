@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "../../db/supabase.client.ts";
 import type { SurveyDto, CompetitionDto } from "../../types.ts";
 import { SUPABASE_ERROR_CODES } from "../constants/supabaseErrors.ts";
+import log from "@/lib/logger";
 
 /**
  * Custom error class for survey not found
@@ -38,7 +39,7 @@ export const getSurveyBySlug = async (slug: string, supabase: SupabaseClient): P
     if (surveyError.code === SUPABASE_ERROR_CODES.NOT_FOUND) {
       throw new SurveyNotFoundError(slug);
     }
-    console.error("Error fetching survey:", surveyError);
+    log.error("Error fetching survey:", surveyError);
     throw new Error("Failed to fetch survey");
   }
 
@@ -54,7 +55,7 @@ export const getSurveyBySlug = async (slug: string, supabase: SupabaseClient): P
     .single();
 
   if (competitionError) {
-    console.error("Error fetching competition:", competitionError);
+    log.error("Error fetching competition:", competitionError);
     throw new Error("Failed to fetch competition");
   }
 

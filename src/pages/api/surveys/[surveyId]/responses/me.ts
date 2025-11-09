@@ -1,6 +1,7 @@
 import type { APIContext } from "astro";
 import { z } from "zod";
 import { SurveyResponseService, SurveyNotFoundError } from "../../../../../lib/services/surveyResponseService";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -74,7 +75,7 @@ export async function GET(context: APIContext): Promise<Response> {
     }
 
     // Log unexpected errors
-    console.error("Error fetching survey response:", error);
+    log.error("Error fetching survey response:", error);
 
     return new Response(JSON.stringify({ message: "Internal Server Error" }), {
       status: 500,

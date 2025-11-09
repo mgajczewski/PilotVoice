@@ -126,8 +126,8 @@ export function UserProfileForm({ initialCivlId, initialRegistrationReason }: Us
 
             <div className="rounded-lg bg-muted/50 border p-4">
               <p className="text-sm text-muted-foreground">
-                <strong>Note:</strong> Providing your CIVL ID helps us verify your participation in competitions. If
-                you don't have a CIVL ID, please provide a brief explanation of your involvement in paragliding.
+                <strong>Note:</strong> Providing your CIVL ID helps us verify your participation in competitions. If you
+                don't have a CIVL ID, please provide a brief explanation of your involvement in paragliding.
               </p>
             </div>
           </div>
@@ -142,4 +142,3 @@ export function UserProfileForm({ initialCivlId, initialRegistrationReason }: Us
     </Card>
   );
 }
-

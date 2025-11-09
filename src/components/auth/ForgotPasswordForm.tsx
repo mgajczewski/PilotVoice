@@ -89,8 +89,8 @@ export function ForgotPasswordForm() {
         <CardContent>
           <Alert variant="success">
             <AlertDescription>
-              If an account exists with the email <strong>{email}</strong>, you will receive password reset
-              instructions shortly. Please check your inbox and spam folder.
+              If an account exists with the email <strong>{email}</strong>, you will receive password reset instructions
+              shortly. Please check your inbox and spam folder.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -108,7 +108,9 @@ export function ForgotPasswordForm() {
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-2xl">Reset Password</CardTitle>
-        <CardDescription>Enter your email address and we'll send you instructions to reset your password</CardDescription>
+        <CardDescription>
+          Enter your email address and we'll send you instructions to reset your password
+        </CardDescription>
       </CardHeader>
 
       <form onSubmit={handleSubmit}>
@@ -157,4 +159,3 @@ export function ForgotPasswordForm() {
     </Card>
   );
 }
-

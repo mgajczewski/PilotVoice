@@ -1,6 +1,7 @@
 import { chromium } from "@playwright/test";
 import path from "path";
 import { LoginPage } from "../pages/LoginPage";
+import log from "@/lib/logger";
 
 /**
  * Creates an authenticated session for the given user and saves it to a storageState file.
@@ -31,7 +32,7 @@ export async function createAuthenticatedSession(
     // Save authenticated state
     await context.storageState({ path: outputPath });
 
-    console.log(`✓ Authenticated state saved to ${outputPath}`);
+    log.info(`✓ Authenticated state saved to ${outputPath}`);
   } catch (error) {
     throw new Error(`Failed to create authenticated session: ${error}`);
   } finally {

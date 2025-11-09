@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { SurveyResponseDto, UpdateSurveyResponseCommand } from "@/types";
 import type { SaveStatus } from "../survey/SaveStatusIndicator";
+import log from "@/lib/logger";
 
 interface UseSurveyAutoSaveParams {
   response: SurveyResponseDto | null;
@@ -90,7 +91,7 @@ export function useSurveyAutoSave({ response, onStatusChange, debounceMs = 5000 
           onStatusChange("idle");
         }, 2000);
       } catch (error) {
-        console.error("Auto-save error:", error);
+        log.error("Auto-save error:", error);
         onStatusChange("error");
 
         // Reset to idle after showing error for 3 seconds
