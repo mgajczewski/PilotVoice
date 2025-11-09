@@ -4,6 +4,14 @@
 
 This document describes the testing environment and best practices for PilotVoice project.
 
+## Documentation Structure
+
+- **[Quick Reference](./testing/quick-reference.md)** - Fast lookup for commands and common patterns
+- **[Test Plan](./testing/test-plan.md)** - Strategic test plan with risk analysis and test scenarios
+- **[E2E Authentication Strategy](./testing/e2e-authentication.md)** - How authentication works in E2E tests
+- **[E2E Fixtures Guide](./testing/e2e-fixtures.md)** - Using fixtures for test data management
+- **[Anonymization Service Tests](./testing/anonymization-service-tests.md)** - Best practices for testing services with provider pattern
+
 ## Tech Stack
 
 ### Unit Testing
@@ -217,7 +225,7 @@ test.describe('Login Flow', () => {
 
 ### Using Fixtures
 
-Fixtures make it easier to reuse page objects across tests:
+Fixtures make it easier to reuse page objects and manage test data across tests. See the [E2E Fixtures Guide](./testing/e2e-fixtures.md) for detailed information.
 
 ```typescript
 import { test, expect } from '../fixtures';
@@ -228,6 +236,10 @@ test('navigation test', async ({ homePage, loginPage }) => {
   expect(await loginPage.isLoaded()).toBeTruthy();
 });
 ```
+
+For detailed information about:
+- **Authentication in E2E tests**: See [E2E Authentication Strategy](./testing/e2e-authentication.md)
+- **Test data management with fixtures**: See [E2E Fixtures Guide](./testing/e2e-fixtures.md)
 
 ## Best Practices
 
@@ -387,4 +399,12 @@ Astro components are server-side rendered, so they should be tested with E2E tes
 - [Testing Library Documentation](https://testing-library.com/)
 - [Playwright Documentation](https://playwright.dev/)
 - [Faker.js Documentation](https://fakerjs.dev/)
+
+## Additional Documentation
+
+- **[Quick Reference](./testing/quick-reference.md)** - Commands and common patterns
+- **[Test Plan](./testing/test-plan.md)** - Strategic test plan with scenarios
+- **[E2E Authentication Strategy](./testing/e2e-authentication.md)** - Authentication in E2E tests
+- **[E2E Fixtures Guide](./testing/e2e-fixtures.md)** - Test data management with fixtures
+- **[Anonymization Service Tests](./testing/anonymization-service-tests.md)** - Testing services with provider pattern
 

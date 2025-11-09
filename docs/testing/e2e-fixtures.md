@@ -1,16 +1,17 @@
-# Survey Fixtures Usage Guide
+# E2E Test Fixtures Usage Guide
 
 ## Overview
 
-System fixtures zapewnia:
-- **Izolację testów** - każdy test tworzy własne dane
-- **Automatyczny cleanup** - dane są usuwane nawet gdy test failuje
-- **Łatwość użycia** - proste funkcje pomocnicze
-- **Czytelność** - cały kontekst testu w jednym miejscu
+The fixtures system provides:
 
-## Podstawowe użycie
+- **Test isolation** - each test creates its own data
+- **Automatic cleanup** - data is removed even when tests fail
+- **Ease of use** - simple helper functions
+- **Clarity** - all test context in one place
 
-### 1. Import fixtures w teście
+## Basic Usage
+
+### 1. Import fixtures in your test
 
 ```typescript
 import { test, expect } from "../fixtures";
@@ -21,38 +22,38 @@ import {
 } from "../fixtures/survey-fixtures";
 ```
 
-### 2. Użyj fixtures w teście
+### 2. Use fixtures in your test
 
 ```typescript
 test("my test", async ({ supabase, cleanup }) => {
-  // Tworzenie danych
+  // Create data
   const surveyData = await createEmptySurvey(supabase);
   
-  // WAŻNE: Zawsze trackuj utworzone dane dla cleanup
+  // IMPORTANT: Always track created data for cleanup
   cleanup.track(surveyData);
   
-  // Twój test...
+  // Your test...
   
-  // Cleanup automatycznie uruchomi się po zakończeniu testu
+  // Cleanup will run automatically after the test finishes
 });
 ```
 
-## Dostępne funkcje pomocnicze
+## Available Helper Functions
 
 ### `createEmptySurvey()`
 
-Tworzy pustą ankietę bez odpowiedzi.
+Creates an empty survey without responses.
 
 ```typescript
 const surveyData = await createEmptySurvey(
   supabase,
-  competitionId, // opcjonalne - utworzy nową competition jeśli nie podano
-  suffix // opcjonalne - unikalny suffix dla slug
+  competitionId, // optional - creates new competition if not provided
+  suffix // optional - unique suffix for slug
 );
 cleanup.track(surveyData);
 ```
 
-**Zwraca:**
+**Returns:**
 ```typescript
 {
   competitionId: number;
@@ -63,20 +64,20 @@ cleanup.track(surveyData);
 
 ### `createSurveyWithResponse()`
 
-Tworzy ankietę z istniejącą odpowiedzią dla konkretnego użytkownika.
+Creates a survey with an existing response for a specific user.
 
 ```typescript
 const userId = await getUserIdByEmail(supabase, "user@example.com");
 const surveyData = await createSurveyWithResponse(
   supabase,
   userId,
-  competitionId, // opcjonalne
-  suffix // opcjonalne
+  competitionId, // optional
+  suffix // optional
 );
 cleanup.track(surveyData);
 ```
 
-**Zwraca:**
+**Returns:**
 ```typescript
 {
   competitionId: number;
@@ -88,7 +89,7 @@ cleanup.track(surveyData);
 
 ### `getUserIdByEmail()`
 
-Pobiera ID użytkownika na podstawie email.
+Gets user ID by email address.
 
 ```typescript
 const userId = await getUserIdByEmail(supabase, "user@example.com");
@@ -96,19 +97,19 @@ const userId = await getUserIdByEmail(supabase, "user@example.com");
 
 ### `createTestCompetition()`
 
-Tworzy testową competition (zwykle nie musisz tego używać bezpośrednio).
+Creates a test competition (usually you don't need to use this directly).
 
 ```typescript
 const competitionId = await createTestCompetition(supabase, suffix);
 ```
 
-## Przykłady użycia
+## Usage Examples
 
-### Przykład 1: Test z pustą ankietą
+### Example 1: Test with empty survey
 
 ```typescript
 test("should handle empty survey", async ({ page, surveyPage, supabase, cleanup }) => {
-  // Tworzenie pustej ankiety
+  // Create empty survey
   const surveyData = await createEmptySurvey(supabase, undefined, `test-${Date.now()}`);
   cleanup.track(surveyData);
   
@@ -119,11 +120,11 @@ test("should handle empty survey", async ({ page, surveyPage, supabase, cleanup 
   const buttonText = await surveyPage.getStartButtonText();
   expect(buttonText).toBe("Sign In to Start");
   
-  // Cleanup automatycznie usunie survey i competition
+  // Cleanup will automatically remove survey and competition
 });
 ```
 
-### Przykład 2: Test z istniejącą odpowiedzią
+### Example 2: Test with existing response
 
 ```typescript
 test("should show continue button for existing response", async ({ 
@@ -136,7 +137,7 @@ test("should show continue button for existing response", async ({
   const email = process.env.E2E_USER_EMAIL!;
   const userId = await getUserIdByEmail(supabase, email);
   
-  // Tworzenie ankiety z odpowiedzią
+  // Create survey with response
   const surveyData = await createSurveyWithResponse(
     supabase,
     userId,
@@ -145,7 +146,7 @@ test("should show continue button for existing response", async ({
   );
   cleanup.track(surveyData);
   
-  // Login i test
+  // Login and test
   await loginPage.goto();
   await loginPage.login(email, process.env.E2E_USER_PASSWORD!);
   await page.waitForURL("/");
@@ -156,119 +157,119 @@ test("should show continue button for existing response", async ({
   const buttonText = await surveyPage.getStartButtonText();
   expect(buttonText).toBe("Continue Survey");
   
-  // Cleanup automatycznie usunie response, survey i competition
+  // Cleanup will automatically remove response, survey and competition
 });
 ```
 
-### Przykład 3: Wiele ankiet w jednym teście
+### Example 3: Multiple surveys in one test
 
 ```typescript
 test("should handle multiple surveys", async ({ supabase, cleanup }) => {
-  // Tworzenie wspólnej competition dla obu ankiet
+  // Create shared competition for both surveys
   const competitionId = await createTestCompetition(supabase, `multi-${Date.now()}`);
   
-  // Pierwsza ankieta - pusta
+  // First survey - empty
   const survey1 = await createEmptySurvey(supabase, competitionId, "survey-1");
   cleanup.track(survey1);
   
-  // Druga ankieta - z odpowiedzią
+  // Second survey - with response
   const userId = await getUserIdByEmail(supabase, process.env.E2E_USER_EMAIL!);
   const survey2 = await createSurveyWithResponse(supabase, userId, competitionId, "survey-2");
   cleanup.track(survey2);
   
-  // Testy...
+  // Tests...
   
-  // Cleanup automatycznie usunie obie ankiety, odpowiedzi i competition
+  // Cleanup will automatically remove both surveys, responses and competition
 });
 ```
 
-## Mechanizm Cleanup
+## Cleanup Mechanism
 
-### Jak działa?
+### How does it work?
 
-1. **Utworzenie tracker**: `cleanup` fixture jest automatycznie dostępny w każdym teście
-2. **Tracking**: Wywołujesz `cleanup.track(data)` dla każdych utworzonych danych
-3. **Automatyczny cleanup**: Po zakończeniu testu (nawet jeśli failuje) cleanup automatycznie:
-   - Usuwa responses
-   - Usuwa surveys
-   - Usuwa competitions
-   - W odpowiedniej kolejności (uwzględniając foreign keys)
+1. **Create tracker**: `cleanup` fixture is automatically available in every test
+2. **Tracking**: You call `cleanup.track(data)` for each created data
+3. **Automatic cleanup**: After the test finishes (even if it fails), cleanup automatically:
+   - Removes responses
+   - Removes surveys
+   - Removes competitions
+   - In the correct order (respecting foreign keys)
 
-### Dlaczego to działa nawet gdy test failuje?
+### Why does it work even when the test fails?
 
-Playwright's fixtures używają try-finally pattern:
+Playwright's fixtures use a try-finally pattern:
 
 ```typescript
 cleanup: async ({ supabase }, use) => {
   const cleanup = new FixtureCleanup();
-  await use(cleanup);  // Test wykonuje się tutaj
-  // Cleanup ZAWSZE się wykona, nawet gdy test failuje
+  await use(cleanup);  // Test executes here
+  // Cleanup ALWAYS runs, even when test fails
   await cleanup.cleanup(supabase);
 }
 ```
 
-### Co jeśli cleanup failuje?
+### What if cleanup fails?
 
-- Błędy są logowane do konsoli
-- Proces kontynuuje (nie throwuje)
-- To pozwala na częściowy cleanup gdy to możliwe
+- Errors are logged to console
+- Process continues (doesn't throw)
+- This allows partial cleanup when possible
 
 ## Best Practices
 
 ### ✅ DO:
 
-1. **Zawsze trackuj utworzone dane:**
+1. **Always track created data:**
    ```typescript
    const data = await createEmptySurvey(supabase);
    cleanup.track(data);
    ```
 
-2. **Używaj unikalnych suffixów:**
+2. **Use unique suffixes:**
    ```typescript
    const suffix = `test-${Date.now()}`;
    const data = await createEmptySurvey(supabase, undefined, suffix);
    ```
 
-3. **Twórz dane na początku testu:**
+3. **Create data at the beginning of the test:**
    ```typescript
    test("my test", async ({ supabase, cleanup }) => {
      const data = await createEmptySurvey(supabase);
      cleanup.track(data);
      
-     // Reszta testu...
+     // Rest of the test...
    });
    ```
 
 ### ❌ DON'T:
 
-1. **Nie używaj globalnego state:**
+1. **Don't use global state:**
    ```typescript
-   // ZŁE - testy nie są izolowane
+   // BAD - tests are not isolated
    const surveySlugs = getSurveySlugs();
    ```
 
-2. **Nie twórz danych ręcznie bez trackingu:**
+2. **Don't create data manually without tracking:**
    ```typescript
-   // ZŁE - dane nie będą usunięte
+   // BAD - data won't be removed
    await supabase.from("surveys").insert(...);
    ```
 
-3. **Nie używaj tych samych danych w wielu testach:**
+3. **Don't use the same data in multiple tests:**
    ```typescript
-   // ZŁE - testy są zależne od siebie
+   // BAD - tests depend on each other
    test.describe.configure({ mode: 'serial' });
    ```
 
-## Migracja ze starego podejścia
+## Migration from Old Approach
 
-### Stare podejście (global.setup.ts):
+### Old approach (global.setup.ts):
 
 ```typescript
 const surveySlugs = getSurveySlugs();
 const testSurveySlug = surveySlugs[0];
 ```
 
-### Nowe podejście (fixtures):
+### New approach (fixtures):
 
 ```typescript
 test("my test", async ({ supabase, cleanup }) => {
@@ -282,7 +283,7 @@ test("my test", async ({ supabase, cleanup }) => {
 
 ## Debugging
 
-### Sprawdzenie co zostało utworzone:
+### Check what was created:
 
 ```typescript
 test("debug test", async ({ supabase, cleanup }) => {
@@ -294,9 +295,9 @@ test("debug test", async ({ supabase, cleanup }) => {
 });
 ```
 
-### Sprawdzenie czy cleanup zadziałał:
+### Check if cleanup worked:
 
-Cleanup loguje błędy do konsoli. Sprawdź output testów:
+Cleanup logs errors to console. Check test output:
 
 ```
 Cleanup errors occurred: [
@@ -304,7 +305,7 @@ Cleanup errors occurred: [
 ]
 ```
 
-### Manualny cleanup:
+### Manual cleanup:
 
 ```typescript
 test("manual cleanup test", async ({ supabase }) => {
@@ -320,4 +321,10 @@ test("manual cleanup test", async ({ supabase }) => {
   }
 });
 ```
+
+## See Also
+
+- [E2E Authentication Strategy](./e2e-authentication.md) - Learn about authentication in E2E tests
+- [Main Testing Documentation](../testing.md) - Complete testing documentation
+- [Quick Reference](../TESTING_QUICK_REFERENCE.md) - Testing commands and patterns
 

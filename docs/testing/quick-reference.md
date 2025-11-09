@@ -178,8 +178,10 @@ vi.mock('@/db/supabase.client', () => ({
 
 ## 📚 Full Documentation
 
-- English: `docs/testing-setup.md`
-- Polish: `docs/testing-setup.pl.md`
+- [Main Testing Documentation](../testing.md)
+- [Test Plan](./test-plan.md)
+- [E2E Authentication Strategy](./e2e-authentication.md)
+- [E2E Fixtures Guide](./e2e-fixtures.md)
 
 ## ✅ Test Status
 
