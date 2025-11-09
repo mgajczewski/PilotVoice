@@ -11,8 +11,7 @@ const alertVariants = cva(
         default: "bg-background text-foreground",
         destructive:
           "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive bg-destructive/10",
-        success:
-          "border-secondary/50 text-secondary dark:border-secondary [&>svg]:text-secondary bg-secondary/10",
+        success: "border-secondary/50 text-secondary dark:border-secondary [&>svg]:text-secondary bg-secondary/10",
       },
     },
     defaultVariants: {
@@ -21,16 +20,14 @@ const alertVariants = cva(
   }
 );
 
-function Alert({
-  className,
-  variant,
-  ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+function Alert({ className, variant, ...props }: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
   return <div role="alert" data-slot="alert" className={cn(alertVariants({ variant }), className)} {...props} />;
 }
 
 function AlertTitle({ className, ...props }: React.ComponentProps<"h5">) {
-  return <h5 data-slot="alert-title" className={cn("mb-1 font-medium leading-none tracking-tight", className)} {...props} />;
+  return (
+    <h5 data-slot="alert-title" className={cn("mb-1 font-medium leading-none tracking-tight", className)} {...props} />
+  );
 }
 
 function AlertDescription({ className, ...props }: React.ComponentProps<"div">) {
@@ -38,4 +35,3 @@ function AlertDescription({ className, ...props }: React.ComponentProps<"div">) 
 }
 
 export { Alert, AlertTitle, AlertDescription };
-

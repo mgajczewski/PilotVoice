@@ -1,5 +1,5 @@
-import { faker } from '@faker-js/faker';
-import type { SurveyResponseDto } from '../../src/types';
+import { faker } from "@faker-js/faker";
+import type { SurveyResponseDto } from "../../src/types";
 
 /**
  * Generates test data for authentication
@@ -48,5 +48,3 @@ export const generateCompetition = () => ({
  * Wait helper for async operations
  */
 export const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-

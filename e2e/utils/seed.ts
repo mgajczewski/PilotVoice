@@ -88,4 +88,3 @@ export async function seedDatabase(
     surveySlugs: surveys.map((s) => s.slug),
   };
 }
-

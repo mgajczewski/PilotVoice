@@ -6,6 +6,7 @@ import {
 } from "../../../../../lib/services/surveyResponseService";
 import { surveyIdSchema, createSurveyResponseSchema } from "../../../../../lib/schemas/surveyResponseSchemas";
 import type { CreateSurveyResponseCommand } from "../../../../../types";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -113,7 +114,7 @@ export async function POST(context: APIContext): Promise<Response> {
     }
 
     // Log unexpected errors
-    console.error("Error creating survey response:", error);
+    log.error("Error creating survey response:", error);
 
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,

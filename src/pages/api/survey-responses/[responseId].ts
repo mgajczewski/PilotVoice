@@ -8,6 +8,7 @@ import { AnonymizationError } from "../../../lib/services/anonymizationService";
 import { updateSurveyResponseSchema, responseIdParamSchema } from "../../../lib/schemas/surveyResponseSchemas";
 import type { UpdateSurveyResponseCommand } from "../../../types";
 import { ZodError } from "zod";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -154,7 +155,7 @@ export async function PATCH(context: APIContext): Promise<Response> {
     }
 
     if (error instanceof AnonymizationError) {
-      console.error("Anonymization failed:", error);
+      log.error("Anonymization failed:", error);
       return new Response(
         JSON.stringify({
           error: "Internal Server Error",
@@ -168,7 +169,7 @@ export async function PATCH(context: APIContext): Promise<Response> {
     }
 
     // Handle generic errors
-    console.error("Unexpected error updating survey response:", error);
+    log.error("Unexpected error updating survey response:", error);
     return new Response(
       JSON.stringify({
         error: "Internal Server Error",

@@ -188,4 +188,3 @@ export function ChangePasswordForm() {
     </Card>
   );
 }
-

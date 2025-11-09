@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { RegisterSchema } from "../../../lib/schemas/authSchemas";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -16,7 +17,7 @@ async function verifyRecaptcha(token: string, secretKey: string): Promise<boolea
     const data = await response.json();
     return data.success && data.score >= 0.5; // reCAPTCHA v3 score threshold
   } catch (error) {
-    console.error("reCAPTCHA verification failed:", error);
+    log.error("reCAPTCHA verification failed:", error);
     return false;
   }
 }

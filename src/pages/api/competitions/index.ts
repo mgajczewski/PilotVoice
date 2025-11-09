@@ -1,6 +1,7 @@
 import type { APIContext } from "astro";
 import { z } from "zod";
 import { CompetitionService } from "../../../lib/services/competitionService";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -51,7 +52,7 @@ export async function GET(context: APIContext): Promise<Response> {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error fetching competitions:", error);
+    log.error("Error fetching competitions:", error);
     return new Response(JSON.stringify({ message: "Internal Server Error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

@@ -49,4 +49,3 @@ export const UpdateProfileSchema = z
   });
 
 export type UpdateProfileDto = z.infer<typeof UpdateProfileSchema>;
-

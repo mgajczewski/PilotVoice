@@ -9,12 +9,7 @@ interface FeedbackInputProps {
   placeholder?: string;
 }
 
-export function FeedbackInput({
-  value,
-  onChange,
-  label,
-  placeholder = "Share your thoughts...",
-}: FeedbackInputProps) {
+export function FeedbackInput({ value, onChange, label, placeholder = "Share your thoughts..." }: FeedbackInputProps) {
   return (
     <div className="space-y-3">
       <Label htmlFor="feedback" className="text-base">
@@ -34,4 +29,3 @@ export function FeedbackInput({
     </div>
   );
 }
-

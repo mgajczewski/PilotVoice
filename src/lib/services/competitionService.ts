@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "../../db/supabase.client.ts";
 import type { PaginatedCompetitionsDto } from "../../types.ts";
+import log from "@/lib/logger";
 
 interface GetCompetitionsParams {
   page: number;
@@ -30,12 +31,12 @@ export const getCompetitions = async ({
   const [dataResponse, countResponse] = await Promise.all([dataQuery, countQuery]);
 
   if (dataResponse.error) {
-    console.error("Error fetching competitions data:", dataResponse.error);
+    log.error("Error fetching competitions data:", dataResponse.error);
     throw new Error("Failed to fetch competitions data.");
   }
 
   if (countResponse.error) {
-    console.error("Error fetching competitions count:", countResponse.error);
+    log.error("Error fetching competitions count:", countResponse.error);
     throw new Error("Failed to fetch competitions count.");
   }
 

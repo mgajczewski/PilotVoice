@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { AnonymizationError } from "@/lib/services/anonymizationService";
 import { AnonymizationService } from "@/lib/services/anonymizationServiceProvider";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -102,7 +103,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Handle unexpected errors
-    console.error("Unexpected error in GDPR check:", error);
+    log.error("Unexpected error in GDPR check:", error);
     return new Response(
       JSON.stringify({
         error: "Internal Server Error",

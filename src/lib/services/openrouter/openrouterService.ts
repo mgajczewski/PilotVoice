@@ -6,6 +6,7 @@ import type {
   JSONSchema,
 } from "./types";
 import { OpenRouterError, ApiError, ValidationError } from "./errors";
+import log from "@/lib/logger";
 
 /**
  * Service for interacting with OpenRouter API
@@ -24,7 +25,7 @@ export class OpenRouterService {
     this.appName = config.appName || import.meta.env.APP_NAME || "PilotVoice";
 
     if (!this.apiKey) {
-      console.error("OpenRouterService: OPENROUTER_API_KEY is not configured.");
+      log.error("OpenRouterService: OPENROUTER_API_KEY is not configured.");
       throw new Error("OpenRouter API key is missing. The service cannot be initialized.");
     }
   }
@@ -125,7 +126,7 @@ export class OpenRouterService {
       }
 
       // Handle network failures
-      console.error("OpenRouterService: Network request failed", error);
+      log.error("OpenRouterService: Network request failed", error);
       throw new OpenRouterError("Network request failed. Please check your connection.");
     }
   }
@@ -150,7 +151,7 @@ export class OpenRouterService {
     try {
       parsed = JSON.parse(content);
     } catch (error) {
-      console.error("OpenRouterService: Failed to parse response as JSON", error);
+      log.error("OpenRouterService: Failed to parse response as JSON", error);
       throw new ValidationError("Failed to parse API response as JSON", {
         content,
         error: error instanceof Error ? error.message : String(error),

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import type { SurveyResponseDto } from "../types";
+import log from "@/lib/logger";
 
 interface SurveyStartProps {
   surveyId: number;
@@ -42,7 +43,7 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
           setErrorType("recoverable");
         }
       } catch (err) {
-        console.error("Error fetching user and response:", err);
+        log.error("Error fetching user and response:", err);
         setError("An error occurred while loading data.");
         setErrorType("recoverable");
       }
@@ -103,7 +104,7 @@ export function SurveyStart({ surveyId, surveySlug }: SurveyStartProps) {
         setErrorType("recoverable");
       }
     } catch (err) {
-      console.error("Error starting survey:", err);
+      log.error("Error starting survey:", err);
       setError("An error occurred while starting the survey. Please try again.");
       setErrorType("recoverable");
     } finally {

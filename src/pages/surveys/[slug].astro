@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { SurveyService, SurveyNotFoundError } from "../../lib/services/surveyService";
 import { SurveyInfoCard } from "../../components/SurveyInfoCard";
 import { SurveyStart } from "../../components/SurveyStart";
+import log from "@/lib/logger";
 
 export const prerender = false;
 
@@ -25,7 +26,7 @@ try {
   if (error instanceof SurveyNotFoundError) {
     return Astro.redirect("/404");
   }
-  console.error("Error loading survey:", error);
+  log.error("Error loading survey:", error);
   return Astro.redirect("/500");
 }
 

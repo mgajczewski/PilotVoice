@@ -255,4 +255,3 @@ export function RegisterForm({ recaptchaSiteKey }: RegisterFormProps) {
     </GoogleReCaptchaProvider>
   );
 }
-
