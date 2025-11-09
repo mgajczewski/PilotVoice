@@ -12,6 +12,7 @@ import { AnonymizationError } from "../../../src/lib/services/anonymizationServi
 import { SUPABASE_ERROR_CODES } from "../../../src/lib/constants/supabaseErrors";
 import type { SurveyResponseDto, CreateSurveyResponseCommand, UpdateSurveyResponseCommand } from "../../../src/types";
 import type { SupabaseClient } from "../../../src/db/supabase.client";
+import log from "../../../src/lib/logger";
 
 // Mock the AnonymizationService
 vi.mock("../../../src/lib/services/anonymizationServiceProvider", () => ({
@@ -655,7 +656,7 @@ describe("SurveyResponseService", () => {
 
       mockSupabase.from.mockReturnValue(fetchQueryBuilder);
 
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+      const logErrorSpy = vi.spyOn(log, "error").mockImplementation(() => undefined);
 
       // Act
       const error = await captureError(updateSurveyResponse(toSupabaseClient(), command, testResponseId, testUserId));
@@ -663,14 +664,14 @@ describe("SurveyResponseService", () => {
       // Assert
       expect(error).toBeInstanceOf(AnonymizationError);
       expect(error.message).toBe("Failed to anonymize feedback: API rate limit exceeded");
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(logErrorSpy).toHaveBeenCalledWith(
         expect.stringContaining(`Anonymization error for survey response ${testResponseId}`),
         anonymizationError
       );
       expect(fetchQueryBuilder.select).toHaveBeenCalledWith("*");
       expect(fetchQueryBuilder.eq).toHaveBeenCalledWith("id", testResponseId);
 
-      consoleErrorSpy.mockRestore();
+      logErrorSpy.mockRestore();
     });
 
     it("should wrap unknown errors in AnonymizationError", async () => {
@@ -684,7 +685,7 @@ describe("SurveyResponseService", () => {
 
       mockSupabase.from.mockReturnValue(fetchQueryBuilder);
 
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+      const logErrorSpy = vi.spyOn(log, "error").mockImplementation(() => undefined);
 
       // Act
       const error = await captureError(updateSurveyResponse(toSupabaseClient(), command, testResponseId, testUserId));
@@ -692,14 +693,14 @@ describe("SurveyResponseService", () => {
       // Assert
       expect(error).toBeInstanceOf(AnonymizationError);
       expect(error.message).toBe("Failed to anonymize feedback: Network failure");
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(logErrorSpy).toHaveBeenCalledWith(
         expect.stringContaining(`Unknown error during anonymization for survey response ${testResponseId}`),
         unknownError
       );
       expect(fetchQueryBuilder.select).toHaveBeenCalledWith("*");
       expect(fetchQueryBuilder.eq).toHaveBeenCalledWith("id", testResponseId);
 
-      consoleErrorSpy.mockRestore();
+      logErrorSpy.mockRestore();
     });
 
     it("should throw generic error when fetch fails", async () => {
