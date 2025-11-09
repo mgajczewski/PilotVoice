@@ -43,7 +43,7 @@ export const test = base.extend<TestFixtures>({
     await use(surveyFillPage);
   },
 
-  supabase: async (_page, use) => {
+  supabase: async ({ page: _page }, use) => {
     const client = createSupabaseTestClient();
     await use(client);
   },
