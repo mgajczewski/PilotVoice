@@ -129,6 +129,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 disabled={isLoading}
                 aria-invalid={!!fieldErrors.email}
                 aria-describedby={fieldErrors.email ? "email-error" : undefined}
+                data-testid="login-email-input"
               />
               {fieldErrors.email && (
                 <p id="email-error" className="text-sm text-destructive">
@@ -151,6 +152,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 disabled={isLoading}
                 aria-invalid={!!fieldErrors.password}
                 aria-describedby={fieldErrors.password ? "password-error" : undefined}
+                data-testid="login-password-input"
               />
               {fieldErrors.password && (
                 <p id="password-error" className="text-sm text-destructive">
@@ -163,6 +165,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
               <a
                 href="/forgot-password"
                 className="text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded"
+                data-testid="login-forgot-password-link"
               >
                 Forgot password?
               </a>
@@ -171,7 +174,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+          <Button type="submit" className="w-full" size="lg" disabled={isLoading} data-testid="login-submit-button">
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>
 
@@ -186,4 +189,3 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     </Card>
   );
 }
-

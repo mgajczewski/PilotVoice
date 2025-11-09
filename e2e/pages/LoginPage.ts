@@ -13,11 +13,11 @@ export class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.emailInput = page.getByRole("textbox", { name: /email/i });
-    this.passwordInput = page.getByLabel(/password/i);
-    this.submitButton = page.getByRole("button", { name: /sign in/i });
+    this.emailInput = page.getByTestId("login-email-input");
+    this.passwordInput = page.getByTestId("login-password-input");
+    this.submitButton = page.getByTestId("login-submit-button");
     this.errorMessage = page.locator("#email-error");
-    this.forgotPasswordLink = page.getByRole("link", { name: /forgot password/i });
+    this.forgotPasswordLink = page.getByTestId("login-forgot-password-link");
   }
 
   async goto() {

@@ -34,10 +34,10 @@ const { user } = Astro.locals;
         ) : (
           <>
             {/* Unauthenticated Navigation */}
-            <a href="/login" class={buttonVariants({ variant: "ghost" })}>
+            <a href="/login" class={buttonVariants({ variant: "ghost" })} data-testid="header-login">
               Sign In
             </a>
-            <a href="/register" class={buttonVariants()}>
+            <a href="/register" class={buttonVariants()} data-testid="header-register">
               Sign Up
             </a>
           </>

@@ -33,7 +33,10 @@ const features = [
   <section class="min-h-[80vh] flex items-center justify-center px-4 py-16 md:py-24">
     <div class="container mx-auto max-w-4xl text-center">
       <!-- Headline -->
-      <h1 class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl mb-6">
+      <h1
+        class="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl mb-6"
+        data-testid="home-heading"
+      >
         Your Voice in Paragliding Competitions
       </h1>
 
@@ -45,8 +48,10 @@ const features = [
 
       <!-- CTA Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="/register" class={buttonVariants({ size: "lg" })}> Sign Up Now </a>
-        <a href="/login" class={buttonVariants({ size: "lg", variant: "outline" })}> Sign In </a>
+        <a href="/register" class={buttonVariants({ size: "lg" })} data-testid="home-register"> Sign Up Now </a>
+        <a href="/login" class={buttonVariants({ size: "lg", variant: "outline" })} data-testid="home-login">
+          Sign In
+        </a>
       </div>
     </div>
   </section>

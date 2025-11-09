@@ -13,11 +13,11 @@ export class HomePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.heading = page.getByRole("heading", { level: 1 });
-    this.headerLoginButton = page.getByRole("banner").getByRole("link", { name: /sign in/i });
-    this.headerRegisterButton = page.getByRole("banner").getByRole("link", { name: /sign up/i });
-    this.heroLoginButton = page.getByRole("main").getByRole("link", { name: /sign in/i });
-    this.heroRegisterButton = page.getByRole("main").getByRole("link", { name: /sign up/i });
+    this.heading = page.getByTestId("home-heading");
+    this.headerLoginButton = page.getByTestId("header-login");
+    this.headerRegisterButton = page.getByTestId("header-register");
+    this.heroLoginButton = page.getByTestId("home-login");
+    this.heroRegisterButton = page.getByTestId("home-register");
   }
 
   async goto() {
