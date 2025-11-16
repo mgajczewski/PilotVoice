@@ -3,6 +3,45 @@ import type { Tables, TablesInsert, TablesUpdate } from "./db/database.types";
 /**
  * =================================================================================
  *
+ * FEATURE FLAGS
+ *
+ * =================================================================================
+ */
+
+/**
+ * Possible values for the anonymization feature flag.
+ */
+export type AnonymizationValue = "none" | "random" | "ai";
+
+/**
+ * Structure for feature flag settings.
+ */
+export interface FeatureFlagSettings {
+  captcha: boolean;
+  anonymization: AnonymizationValue;
+}
+
+/**
+ * =================================================================================
+ *
+ * GLOBAL TYPE AUGMENTATIONS
+ *
+ * =================================================================================
+ */
+
+/**
+ * Extend the Window interface to include feature flags.
+ * Feature flags are injected by the server and control client-side behavior.
+ */
+declare global {
+  interface Window {
+    featureFlags?: FeatureFlagSettings;
+  }
+}
+
+/**
+ * =================================================================================
+ *
  * UTILITY TYPES
  *
  * =================================================================================

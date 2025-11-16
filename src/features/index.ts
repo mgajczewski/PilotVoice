@@ -1,18 +1,10 @@
 import log from "@/lib/logger";
+import type { FeatureFlagSettings } from "@/types";
 
 // --- 1. Types and Environment Configuration ---
 
 // Define the names of your feature flags
 type FeatureFlag = "captcha" | "anonymization";
-
-// Define the possible values for the 'anonymization' flag
-type AnonymizationValue = "none" | "random" | "ai";
-
-// Define the structure for feature flag settings
-interface FeatureFlagSettings {
-  captcha: boolean;
-  anonymization: AnonymizationValue;
-}
 
 // Define the available environments
 type Environment = "development" | "test" | "production";
@@ -22,11 +14,11 @@ type Environment = "development" | "test" | "production";
 const featuresConfig: Record<Environment, FeatureFlagSettings> = {
   development: {
     captcha: false,
-    anonymization: "none",
+    anonymization: "random",
   },
   test: {
     captcha: true,
-    anonymization: "ai",
+    anonymization: "none",
   },
   production: {
     captcha: true,

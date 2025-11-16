@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface RegisterFormProps {
-  recaptchaSiteKey: string;
+  recaptchaSiteKey?: string;
 }
 
 function RegisterFormContent() {
@@ -114,7 +114,10 @@ function RegisterFormContent() {
       return;
     }
 
-    if (!executeRecaptcha) {
+    // Check if captcha is enabled via window.featureFlags
+    const isCaptchaEnabled = window.featureFlags?.captcha;
+
+    if (isCaptchaEnabled && !executeRecaptcha) {
       setError("reCAPTCHA not loaded. Please refresh the page.");
       return;
     }
@@ -122,8 +125,11 @@ function RegisterFormContent() {
     setIsLoading(true);
 
     try {
-      // Execute reCAPTCHA
-      const recaptchaToken = await executeRecaptcha("register");
+      // Execute reCAPTCHA only if enabled
+      let recaptchaToken: string | undefined;
+      if (isCaptchaEnabled && executeRecaptcha) {
+        recaptchaToken = await executeRecaptcha("register");
+      }
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -249,9 +255,15 @@ function RegisterFormContent() {
 }
 
 export function RegisterForm({ recaptchaSiteKey }: RegisterFormProps) {
-  return (
-    <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey}>
-      <RegisterFormContent />
-    </GoogleReCaptchaProvider>
-  );
+  // Only use GoogleReCaptchaProvider if recaptchaSiteKey is provided (captcha is enabled)
+  if (recaptchaSiteKey) {
+    return (
+      <GoogleReCaptchaProvider reCaptchaKey={recaptchaSiteKey}>
+        <RegisterFormContent />
+      </GoogleReCaptchaProvider>
+    );
+  }
+
+  // If captcha is disabled, render the form without the provider
+  return <RegisterFormContent />;
 }
