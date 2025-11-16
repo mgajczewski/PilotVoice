@@ -1,17 +1,23 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { RegisterForm } from "../components/auth/RegisterForm";
+import { isFeatureEnabled, getAllFeatureFlags } from "@/features";
 
 const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY;
+const isCaptchaEnabled = isFeatureEnabled("captcha");
+const allFeatures = getAllFeatureFlags();
 ---
 
 <Layout
   title="Sign Up - PilotVoice"
   description="Create your PilotVoice account to start sharing feedback on paragliding competitions."
 >
+  <script define:vars={{ allFeatures }}>
+    window.featureFlags = allFeatures;
+  </script>
   <section class="min-h-[80vh] flex items-center justify-center px-4 py-16">
     <div class="w-full max-w-md">
-      <RegisterForm client:load recaptchaSiteKey={recaptchaSiteKey} />
+      <RegisterForm client:load recaptchaSiteKey={isCaptchaEnabled ? recaptchaSiteKey : undefined} />
     </div>
   </section>
 </Layout>
