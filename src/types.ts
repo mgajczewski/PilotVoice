@@ -19,6 +19,8 @@ export type AnonymizationValue = "none" | "random" | "ai";
 export interface FeatureFlagSettings {
   captcha: boolean;
   anonymization: AnonymizationValue;
+  userSurveys: boolean;
+  surveySummary: boolean;
 }
 
 /**

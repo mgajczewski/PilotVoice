@@ -4,7 +4,7 @@ import type { FeatureFlagSettings } from "@/types";
 // --- 1. Types and Environment Configuration ---
 
 // Define the names of your feature flags
-type FeatureFlag = "captcha" | "anonymization";
+type FeatureFlag = "captcha" | "anonymization" | "userSurveys" | "surveySummary";
 
 // Define the available environments
 type Environment = "development" | "test" | "production";
@@ -15,14 +15,20 @@ const featuresConfig: Record<Environment, FeatureFlagSettings> = {
   development: {
     captcha: false,
     anonymization: "random",
+    userSurveys: true,
+    surveySummary: true,
   },
   test: {
     captcha: true,
     anonymization: "none",
+    userSurveys: false,
+    surveySummary: false,
   },
   production: {
     captcha: true,
     anonymization: "ai",
+    userSurveys: false,
+    surveySummary: false,
   },
 };
 
