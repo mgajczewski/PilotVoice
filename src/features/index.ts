@@ -15,20 +15,20 @@ interface FeatureFlagSettings {
 }
 
 // Define the available environments
-type Environment = "local" | "integration" | "prod";
+type Environment = "development" | "test" | "production";
 
 // --- 2. Feature Flag Configuration ---
 
 const featuresConfig: Record<Environment, FeatureFlagSettings> = {
-  local: {
+  development: {
     captcha: false,
     anonymization: "none",
   },
-  integration: {
+  test: {
     captcha: true,
     anonymization: "ai",
   },
-  prod: {
+  production: {
     captcha: true,
     anonymization: "ai",
   },
@@ -37,17 +37,16 @@ const featuresConfig: Record<Environment, FeatureFlagSettings> = {
 // --- 3. Feature Flag Access Logic ---
 
 /**
- * Retrieves the current environment from ENV_NAME environment variable.
- * Defaults to 'local' if the variable is not set or invalid.
+ * Retrieves the current environment from NODE_ENV environment variable.
+ * Throws an error if the variable is not set or invalid.
  * @returns {Environment} The current environment.
  */
 function getCurrentEnvironment(): Environment {
-  const env = import.meta.env.ENV_NAME;
-  if (env === "local" || env === "integration" || env === "prod") {
+  const env = import.meta.env.NODE_ENV;
+  if (env === "development" || env === "test" || env === "production") {
     return env;
   }
-  log.warn(`Invalid or missing ENV_NAME: "${env}". Defaulting to 'local' environment.`);
-  return "local";
+  throw new Error(`Invalid or missing NODE_ENV: "${env}".`);
 }
 
 /**
