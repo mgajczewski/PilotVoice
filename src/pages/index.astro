@@ -3,6 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import FeatureCard from "../components/FeatureCard.astro";
 import { buttonVariants } from "../components/ui/button";
 
+// Check if user is authenticated
+const { user } = Astro.locals;
+
 const features = [
   {
     icon: "⚡",
@@ -47,12 +50,18 @@ const features = [
       </p>
 
       <!-- CTA Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="/register" class={buttonVariants({ size: "lg" })} data-testid="home-register"> Sign Up Now </a>
-        <a href="/login" class={buttonVariants({ size: "lg", variant: "outline" })} data-testid="home-login">
-          Sign In
-        </a>
-      </div>
+      {
+        !user && (
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="/register" class={buttonVariants({ size: "lg" })} data-testid="home-register">
+              Sign Up Now
+            </a>
+            <a href="/login" class={buttonVariants({ size: "lg", variant: "outline" })} data-testid="home-login">
+              Sign In
+            </a>
+          </div>
+        )
+      }
     </div>
   </section>
 
